@@ -3,8 +3,11 @@ import * as THREE from "three";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
-import { AnimatedCharacter, CharacterPlaceholder, type ClipWeights } from "./AnimatedCharacter";
+import { AnimatedCharacter, CharacterPlaceholder, type ClipWeights, type Extra } from "./AnimatedCharacter";
 import { ENV_INTENSITY, ForestEnvironment, buildForestLayout } from "./ForestEnvironment";
+import { makeLantern } from "./Lantern";
+import { makeBackpack } from "./Backpack";
+import { computeTravel, smoothTravel } from "./footLock";
 import { ASSET_PATHS, loadGltf, useAsset } from "./useAsset";
 
 /* ------------------------------------------------------------------------------------------------
@@ -20,43 +23,48 @@ const ease = (v: number) => { const t = clamp(v); return t * t * (3 - 2 * t); };
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 /* ---------- timeline ---------- */
-const CHARACTER_HEIGHT = 1.6;
-const WALK_SPEED = 0.45;            // scene units per second while walking (measured from the Walking_A stance foot, scaled to height)
-const WALK_UNTIL = 185;             // frame where the traveller starts to slow
-const STOP_BY = 225;                // frame where the traveller is standing still
-const START_Z = -6;
-const WALK_CLIP = "Walking_A";
-const IDLE_CLIP = "Idle_A";
+const CHARACTER_HEIGHT = 1.75;
+const WALK_UNTIL = 174;             // frame where the walk starts to blend into the idle (chosen by sweeping for the least foot sliding)
+const STOP_BY = 210;                // frame where the traveller is standing still
+const START_Z = -7;
+const WALK_CLIP = "Walk_Loop";
+const IDLE_CLIP = "Idle_Loop";
+const HAIR_TINT = "#7a5236"; // the kit's hair texture is grey; this makes it a medium-dark brown
+const FEET: [string, string] = ["foot_l", "foot_r"];
 
 const walkWeight = (frame: number) => 1 - ease((frame - WALK_UNTIL) / (STOP_BY - WALK_UNTIL));
 const clipWeights = (frame: number): ClipWeights => { const w = walkWeight(frame); return { [WALK_CLIP]: w, [IDLE_CLIP]: 1 - w }; };
-
-/** Traveller position along the trail. Summed from frame 0 each time, so it never depends on render order. */
-const travellerZ = (frame: number) => {
-  let z = START_Z;
-  for (let f = 0; f < frame; f++) z += (WALK_SPEED * walkWeight(f)) / FPS;
-  return z;
-};
-
 const dawnAt = (frame: number) => ease((frame - 30) / 230);
 
+/** Where the traveller is, as a function of the frame. Built from the animation itself (see footLock.ts) so planted feet do not slide. */
+type TravelPath = { z: (frame: number) => number; camZ: (frame: number) => number };
+const EST_SPEED = 0.88; // rough speed, only used to lay out the scenery before the animation has loaded
+const estimatePath: TravelPath = (() => {
+  const z = (f: number) => START_Z + (EST_SPEED / FPS) * (Math.min(f, WALK_UNTIL) + 0.5 * Math.max(0, Math.min(f, STOP_BY) - WALK_UNTIL));
+  return { z, camZ: z };
+})();
+const pathFrom = (table: Float32Array): TravelPath => {
+  const smooth = smoothTravel(table, 12);
+  return { z: (f) => START_Z + table[clamp(Math.round(f), 0, table.length - 1)], camZ: (f) => START_Z + smooth[clamp(Math.round(f), 0, table.length - 1)] };
+};
+
 /* ---------- camera ---------- */
-const cameraAt = (frame: number) => {
-  const z = travellerZ(frame);
-  const push = ease((frame - 190) / 110);
-  const dist = lerp(4.4, 3.8, push);
+const cameraAt = (frame: number, path: TravelPath) => {
+  const z = path.camZ(frame);
+  const push = ease((frame - 195) / 105);
   const drift = ease(frame / FRAMES);
+  const dist = lerp(4.7, 4.0, push);
   return {
-    pos: new THREE.Vector3(lerp(1.0, 0.3, drift), lerp(1.2, 1.05, push), z + dist),
-    look: new THREE.Vector3(lerp(-0.05, 0, drift), lerp(0.95, 0.9, push), z),
-    fov: lerp(38, 36, push),
+    pos: new THREE.Vector3(lerp(1.05, 0.35, drift), lerp(1.3, 1.2, push), z + dist),
+    look: new THREE.Vector3(lerp(-0.05, 0, drift), lerp(0.98, 0.95, push), z),
+    fov: lerp(38, 35, push),
   };
 };
 
 /** True when something at (x, z) with this radius would sit between the camera and the traveller at any point in the shot. */
 const blocksView = (x: number, z: number, radius: number) => {
   for (let f = 0; f <= FRAMES; f += 15) {
-    const c = cameraAt(f).pos, tz = travellerZ(f);
+    const c = cameraAt(f, estimatePath).pos, tz = estimatePath.z(f);
     const dx = 0 - c.x, dz = tz - c.z;
     const u = clamp(((x - c.x) * dx + (z - c.z) * dz) / (dx * dx + dz * dz));
     if (Math.hypot(x - (c.x + u * dx), z - (c.z + u * dz)) < radius) return true;
@@ -64,16 +72,6 @@ const blocksView = (x: number, z: number, radius: number) => {
   return false;
 };
 
-/* ---------- lantern: a small procedural prop held in the left hand ---------- */
-const lanternGold = new THREE.MeshStandardMaterial({ color: "#c98d3a", roughness: 0.35, metalness: 0.7, envMapIntensity: ENV_INTENSITY });
-const lanternGlass = new THREE.MeshStandardMaterial({ color: "#e89442", emissive: "#ff8a20", emissiveIntensity: 1.6, roughness: 0.4 });
-const glowTexture = (() => {
-  const cv = document.createElement("canvas"); cv.width = cv.height = 128;
-  const g = cv.getContext("2d")!; const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  r.addColorStop(0, "rgba(255,255,255,1)"); r.addColorStop(0.25, "rgba(255,255,255,0.45)"); r.addColorStop(1, "rgba(255,255,255,0)");
-  g.fillStyle = r; g.fillRect(0, 0, 128, 128);
-  return new THREE.CanvasTexture(cv);
-})();
 const shadowTexture = (() => {
   const cv = document.createElement("canvas"); cv.width = cv.height = 128;
   const g = cv.getContext("2d")!; const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
@@ -81,46 +79,24 @@ const shadowTexture = (() => {
   g.fillStyle = r; g.fillRect(0, 0, 128, 128);
   return new THREE.CanvasTexture(cv);
 })();
-const glowMaterial = new THREE.SpriteMaterial({ map: glowTexture, color: "#ff9a3c", transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, opacity: 0.9 });
-
-/** The lantern hangs from the hand: its top ring is at the group origin, and the pieces hang below it. */
-const makeLantern = () => {
-  const group = new THREE.Group();
-  const body = new THREE.Group();
-  body.position.y = -0.31;
-  group.add(body);
-  const add = (geo: THREE.BufferGeometry, mat: THREE.Material, y: number) => { const m = new THREE.Mesh(geo, mat); m.position.y = y; body.add(m); return m; };
-  add(new THREE.BoxGeometry(0.2, 0.26, 0.2), lanternGlass, 0);
-  add(new THREE.BoxGeometry(0.25, 0.04, 0.25), lanternGold, -0.15);
-  add(new THREE.BoxGeometry(0.25, 0.04, 0.25), lanternGold, 0.15);
-  add(new THREE.ConeGeometry(0.16, 0.1, 4), lanternGold, 0.22).rotation.y = Math.PI / 4;
-  add(new THREE.TorusGeometry(0.07, 0.014, 6, 14), lanternGold, 0.31);
-  const halo = new THREE.Sprite(glowMaterial);
-  halo.scale.setScalar(1.25);
-  body.add(halo);
-  const light = new THREE.PointLight("#ffb454", 4, 7, 2);
-  body.add(light);
-  return { group, body, light };
-};
-
 /** Soft dark disc under the feet: grounds the character the way ambient occlusion would. */
 const ContactShadow: React.FC<{ z: number }> = ({ z }) => (
   <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, z]} renderOrder={2}>
-    <planeGeometry args={[1.15, 0.85]} />
+    <planeGeometry args={[1.0, 0.75]} />
     <meshBasicMaterial map={shadowTexture} transparent opacity={0.55} depthWrite={false} polygonOffset polygonOffsetFactor={-4} fog={false} />
   </mesh>
 );
 
 /* ---------- rigs: scene and camera state are set in layout effects, not during render ---------- */
-const CameraRig: React.FC<{ frame: number }> = ({ frame }) => {
+const CameraRig: React.FC<{ frame: number; path: TravelPath }> = ({ frame, path }) => {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   useLayoutEffect(() => {
-    const c = cameraAt(frame);
+    const c = cameraAt(frame, path);
     camera.position.copy(c.pos);
     camera.fov = c.fov;
     camera.lookAt(c.look);
     camera.updateProjectionMatrix();
-  }, [camera, frame]);
+  }, [camera, frame, path]);
   return null;
 };
 
@@ -166,41 +142,64 @@ const SunLight: React.FC<{ dawn: number; subjectZ: number }> = ({ dawn, subjectZ
 const Scene: React.FC<{ frame: number }> = ({ frame }) => {
   const model = useAsset("character model", () => loadGltf(ASSET_PATHS.character));
   const animFiles = useAsset("animation files", () => Promise.all(ASSET_PATHS.animations.map(loadGltf)));
+  const head = useAsset("head model", () => loadGltf(ASSET_PATHS.head));
+  const hair = useAsset("hair parts", () => Promise.all(ASSET_PATHS.hairParts.map(loadGltf)));
+  // Head, eyes and eyebrows from the base-character kit (full-body mesh cropped to head and neck), plus beard, all on the outfit's skeleton.
+  const extras = useMemo<Extra[] | undefined>(() => {
+    if (head.status !== "ready" || hair.status !== "ready") return undefined;
+    return [
+      { gltf: head.data, include: (n) => n === "SuperHero_Male", headOnly: { minY: 1.5, maxAbsX: 0.16 } },
+      { gltf: head.data, include: (n) => n === "Eyes" || n === "Eyebrows", tint: HAIR_TINT },
+      ...hair.data.map((g) => ({ gltf: g, include: () => true, tint: HAIR_TINT })),
+    ];
+  }, [head, hair]);
   const clips = useMemo(() => (animFiles.status === "ready" ? animFiles.data.flatMap((g) => g.animations) : []), [animFiles]);
   const layout = useMemo(() => buildForestLayout(blocksView), []);
   const lantern = useMemo(makeLantern, []);
-  const attachments = useMemo(() => [{ bone: "handslot.l", object: lantern.group }], [lantern]);
+  const backpack = useMemo(makeBackpack, []);
+  const attachments = useMemo(() => [
+    { bone: "hand_l", object: lantern.group },
+    { bone: "spine_03", object: backpack, bindSpace: true },
+  ], [lantern, backpack]);
   const weights = useMemo(() => clipWeights(frame), [frame]);
 
+  const characterReady = model.status === "ready" && animFiles.status === "ready" && head.status !== "loading" && hair.status !== "loading";
+  // Foot-locked travel table: built once from the clips actually used, so the feet never slide.
+  const path = useMemo(() => {
+    if (!characterReady) return estimatePath;
+    return pathFrom(computeTravel({ model: model.data, animations: clips, weightsAt: clipWeights, fps: FPS, frames: FRAMES, height: CHARACTER_HEIGHT, feet: FEET }));
+  }, [characterReady, model, clips]);
+
   const dawn = dawnAt(frame);
-  const z = travellerZ(frame);
-  const characterReady = model.status === "ready" && animFiles.status === "ready";
+  const z = path.z(frame);
 
   useLayoutEffect(() => {
-    lantern.light.intensity = lerp(3.5, 5.5, dawn) * (1 + 0.06 * Math.sin(frame * 0.7) + 0.04 * Math.sin(frame * 1.9));
-    // Keep the lantern hanging straight down in world space whatever the hand does, with a small sway.
+    lantern.setGlow(frame, lerp(1.1, 1.7, dawn));
+    // Keep the lantern hanging straight down in world space whatever the hand does, with a small sway,
+    // and cancel the bone's scale so the lantern is always its real size in metres.
     const parent = lantern.group.parent;
     if (parent) {
       parent.updateWorldMatrix(true, false);
       const q = parent.getWorldQuaternion(new THREE.Quaternion()).invert();
       lantern.group.quaternion.copy(q).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0.05 * Math.sin(frame * 0.11), 0, 0.07 * Math.sin(frame * 0.13 + 1))));
+      lantern.group.scale.setScalar(1 / parent.getWorldScale(new THREE.Vector3()).x);
     }
   }, [lantern, frame, dawn, characterReady]);
 
   return (
     <>
-      <CameraRig frame={frame} />
+      <CameraRig frame={frame} path={path} />
       <Atmosphere dawn={dawn} />
-      <SunLight dawn={dawn} subjectZ={z} />
+      <SunLight dawn={dawn} subjectZ={path.camZ(frame)} />
       <hemisphereLight args={["#a9c6e8", "#3b4a30", lerp(0.35, 0.5, dawn)]} />
       {/* cool rim from behind-right and a warm front fill so the face never goes dark */}
       <directionalLight position={[5, 3, z - 8]} intensity={lerp(0.5, 1.0, dawn)} color="#9cc0ff" />
-      <directionalLight position={[2.5, 2.2, z + 9]} intensity={lerp(0.3, 0.7, dawn)} color="#ffd9b4" />
+      <directionalLight position={[2.5, 2.2, z + 9]} intensity={lerp(0.5, 1.0, dawn)} color="#ffd9b4" />
       {characterReady ? <ContactShadow z={z} /> : null}
       <ForestEnvironment layout={layout} frame={frame} fps={FPS} dawn={dawn} subjectZ={z} />
       {characterReady ? (
         <AnimatedCharacter model={model.data} animations={clips} frame={frame} fps={FPS} weights={weights}
-          height={CHARACTER_HEIGHT} position={[0, 0, z]} attachments={attachments} envMapIntensity={ENV_INTENSITY} />
+          height={CHARACTER_HEIGHT} position={[0, 0, z]} attachments={attachments} envMapIntensity={ENV_INTENSITY} extras={extras} />
       ) : model.status === "error" || animFiles.status === "error" ? (
         <CharacterPlaceholder position={[0, 0, z]} height={CHARACTER_HEIGHT} />
       ) : null}

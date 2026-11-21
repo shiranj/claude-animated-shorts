@@ -6,8 +6,11 @@ import { continueRender, delayRender, staticFile } from "remotion";
 
 /** Asset files live in the Remotion project's `public/` folder (see ASSETS.md). Paths are relative to `public/`. */
 export const ASSET_PATHS = {
-  character: "cinematic/characters/Ranger.glb",
-  animations: ["cinematic/animations/Rig_Medium_General.glb", "cinematic/animations/Rig_Medium_MovementBasic.glb"],
+  character: "cinematic/characters/quaternius/Male_Ranger.gltf",
+  /** Head, eyes and eyebrows come from the base-character kit; hair and beard are separate parts rigged to the same skeleton. */
+  head: "cinematic/characters/quaternius/head/Superhero_Male_FullBody.gltf",
+  hairParts: ["cinematic/characters/quaternius/head/Hair_Beard.gltf"],
+  animations: ["cinematic/animations/UAL1_Standard.glb"],
   groundDiffuse: "cinematic/polyhaven/forrest_ground_03_diff_1k.jpg",
   groundNormal: "cinematic/polyhaven/forrest_ground_03_nor_gl_1k.jpg",
   groundRough: "cinematic/polyhaven/forrest_ground_03_rough_1k.jpg",
