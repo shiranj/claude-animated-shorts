@@ -1,0 +1,30 @@
+{
+  "name": "cinematic-starter",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Standalone test harness for the cinematic starter. Versions match the verified project stack.",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "still": "node render-stills.mjs index.ts CinematicPOC out/poc_ 0,150,299 0.5",
+    "render": "remotion render index.ts CinematicPOC out/cinematic-poc.mp4 --codec h264 --crf 18"
+  },
+  "dependencies": {
+    "@react-three/fiber": "8.15.19",
+    "@react-three/postprocessing": "2.16.0",
+    "@remotion/bundler": "4.0.250",
+    "@remotion/cli": "4.0.250",
+    "@remotion/renderer": "4.0.250",
+    "@remotion/three": "4.0.250",
+    "postprocessing": "6.34.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.250",
+    "three": "0.160.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.3",
+    "@types/three": "0.160.0",
+    "typescript": "5.5.4"
+  }
+}

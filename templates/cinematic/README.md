@@ -12,6 +12,17 @@ A 10-second, 1080x1920 vertical scene to validate the new cinematic stylized-3D 
 
 The character and environment in this first technical proof of concept are procedural Three.js geometry. This keeps the test fully free and self-contained. They are **prototype assets**, not the final quality ceiling. The next iteration should replace the hero character and selected environment elements with polished, licence-verified free GLB assets or custom Blender models.
 
+## Standalone test setup (P0)
+
+This folder now contains a minimal test harness: `index.ts`, `Root.tsx`, `tsconfig.json`, `package.json` (pinned versions) and `render-stills.mjs`. It does not turn the repository into an app. Use it one of two ways:
+
+1. **In an existing Remotion project** (recommended): copy this folder into `src/`, or copy `CinematicPOC.tsx` and register the composition as shown below. Then run `node render-stills.mjs index.ts CinematicPOC out/poc_ 0,150,299 0.5` from the folder that has `node_modules`.
+2. **Fresh folder**: copy this folder somewhere, run `npm install`, then `npm run typecheck` and `npm run still`.
+
+Optional environment variables for `render-stills.mjs`: `CHROME_PATH`, `REMOTION_TMP`, `REMOTION_PUBLIC`.
+
+Verified (P0): type-check passes and stills render with Remotion 4.0.250, three 0.160.1, R3F 8.15.19. See `docs/p0-results/` for before and after stills.
+
 ## Integration
 
 This file is designed to be copied into the user's Remotion project. It relies on the existing skill stack:
