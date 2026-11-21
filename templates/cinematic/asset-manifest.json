@@ -135,6 +135,68 @@
         "used for image-based lighting only; not shown as the background"
       ],
       "localPath": "public/cinematic/polyhaven/spruit_dawn_1k.hdr"
+    },
+    {
+      "creator": "Quaternius",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attributionRequired": false,
+      "filesHashAlgorithm": "sha256",
+      "source": "quaternius.com (also on itch.io)",
+      "category": "character",
+      "id": "quaternius-female-ranger",
+      "name": "Female Ranger outfit (Modular Character Outfits - Fantasy, Standard) - second character, P3",
+      "assetPage": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "archive": "Modular Character Outfits - Fantasy[Standard].zip",
+      "archiveSha256": "c3468b18871cc8c8f05ab14df7712baf22cb9f389cbd870babf130e595187f70",
+      "licenseEvidence": "License_Outfits.txt inside the zip says CC0 1.0 (same file as for the Male Ranger). Shares the T_Ranger_* textures already listed under the Male Ranger.",
+      "modifications": [
+        "none (used as exported; the Standard Female Ranger shares the 65-bone skeleton)"
+      ],
+      "localPath": "public/cinematic/characters/quaternius/",
+      "files": {
+        "Female_Ranger.gltf": "9b98b2ae6af3b4a1ec22bf8928b939e0751f08b25b636de82bfa7364fb34d3e1",
+        "Female_Ranger.bin": "d015964ba0a26eee9c9d2ea6f07aa660bba88aa536cf8bb6b67944b9e97c46df",
+        "T_Regular_Female_Dark_BaseColor.png": "3b6ab973f9f3d6f8961226a0dbd99cf6d1b72df3795a8a5c1620a55754c161c2",
+        "T_Regular_Female_Normal.png": "e1051d3d56df9cf061bc14c769c37253aecd595f8275f9d4c0d6e0e953c00e18",
+        "T_Regular_Female_Roughness.png": "da541fbd4b3bffe754fada5c29f8a0d8f836bf20ce7df8273607af4729a3a5ae"
+      },
+      "optional": true,
+      "optionalNote": "Only needed for the second-character test (TwoCharacterTest)."
+    },
+    {
+      "creator": "Quaternius",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attributionRequired": false,
+      "filesHashAlgorithm": "sha256",
+      "source": "quaternius.com (also on itch.io)",
+      "category": "character",
+      "id": "quaternius-female-head",
+      "name": "Female head, eyes, eyebrows and Buns hair (Universal Base Characters, Standard) - second character, P3",
+      "assetPage": "https://quaternius.com/packs/universalbasecharacters.html",
+      "archive": "Universal Base Characters[Standard].zip",
+      "archiveSha256": "fdbf1804c90dfc1ea03e992bff7da2dfd1a79318e13270a660180f9308455f40",
+      "licenseEvidence": "License_Standard.txt inside the zip: \"CC0 1.0 Universal (CC0 1.0) Public Domain Dedication\".",
+      "modifications": [
+        "full-body mesh cropped at load time to the head and neck (triangles above y = 1.45 m)",
+        "eyes and eyebrows cut into left and right solid pieces at load time (rigid face parts)",
+        "hair and eyebrow colour tinted brown at load time"
+      ],
+      "localPath": "public/cinematic/characters/quaternius/head/",
+      "files": {
+        "Superhero_Female_FullBody.gltf": "adedf28000a0716f689b009a70314506fc62f827498f77ba852acb5610f3f3f4",
+        "Superhero_Female_FullBody.bin": "3a8220a485b33d05d879115a50697728b45a151781106033afb8b8c243fca208",
+        "T_Superhero_Female_Dark_BaseColor.png": "d366843ee7d9e9f37ec87a0e1c98c7f2e45573c08eeb80a51a6d9344e68cf288",
+        "T_Superhero_Female_Normal.png": "cf922460b43ccd31e983e34db05514c9d451dd2f9cdd01a843978e797719f859",
+        "T_Superhero_Female_Roughness.png": "d2beabf2bd0313e32c68dcdbb80dca371a6e994fabf96efa97128bf9f14fa57b",
+        "Hair_Buns.gltf": "cbdd6f509ec8f1021361b53da6fa1a077b95762ebc8bc2d8acae59bb0cb263c1",
+        "Hair_Buns.bin": "811606cc84f0bfdefa2e6f1396f3d94c35138308a96d78a4f447b2e7dfc6ed6c",
+        "T_Hair_2_BaseColor.png": "f9f4f2fb3eeeefb0b6f0fdef38b0770fd6607640c1c680b8139dd76697e9f9b3",
+        "T_Hair_2_Normal.png": "172f230aae0d4366c3cfc0402b2e6d1811b11f8487344bff28605eeacac1558d"
+      },
+      "optional": true,
+      "optionalNote": "Only needed for the second-character test (TwoCharacterTest)."
     }
   ]
 }

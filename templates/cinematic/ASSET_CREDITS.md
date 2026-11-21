@@ -7,6 +7,8 @@ Checked 2026-11-21. All assets below are CC0 1.0. No attribution is required; cr
 | Male Ranger outfit (Modular Character Outfits - Fantasy, Standard) | Quaternius | https://quaternius.com/packs/modularcharacteroutfitsfantasy.html | CC0 1.0 |
 | Head, eyes, eyebrows and beard (Universal Base Characters, Standard) | Quaternius | https://quaternius.com/packs/universalbasecharacters.html | CC0 1.0 |
 | Animation clips Walk_Loop and Idle_Loop (Universal Animation Library, Standard) | Quaternius | https://quaternius.com/packs/universalanimationlibrary.html | CC0 1.0 |
+| Female Ranger outfit (Modular Character Outfits - Fantasy, Standard), second character | Quaternius | https://quaternius.com/packs/modularcharacteroutfitsfantasy.html | CC0 1.0 |
+| Female head, eyes, eyebrows and Buns hair (Universal Base Characters, Standard), second character | Quaternius | https://quaternius.com/packs/universalbasecharacters.html | CC0 1.0 |
 | Forest Ground 03 (PBR texture) | Rob Tuytel | https://polyhaven.com/a/forrest_ground_03 | CC0 1.0 |
 | Spruit Dawn (HDRI) | Greg Zaal | https://polyhaven.com/a/spruit_dawn | CC0 1.0 |
 

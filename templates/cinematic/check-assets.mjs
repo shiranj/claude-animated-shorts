@@ -7,9 +7,11 @@ import crypto from "node:crypto";
 const manifest = JSON.parse(fs.readFileSync(new URL("./asset-manifest.json", import.meta.url), "utf8"));
 const hash = (file, algo) => crypto.createHash(algo).update(fs.readFileSync(file)).digest("hex");
 let problems = 0;
-const report = (ok, msg) => { console.log(`${ok ? "OK     " : "MISSING"} ${msg}`); if (!ok) problems++; };
+let optional = false; // assets marked optional are reported but do not count as problems
+const report = (ok, msg) => { console.log(`${ok ? "OK     " : optional ? "optional-missing" : "MISSING"} ${msg}`); if (!ok && !optional) problems++; };
 
 for (const a of manifest.assets) {
+  optional = a.optional === true;
   if (a.files) {
     for (const [name, sum] of Object.entries(a.files)) {
       const file = path.join(a.localPath.endsWith("/") ? a.localPath : path.dirname(a.localPath), name);
