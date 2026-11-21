@@ -2,3 +2,5 @@
 public/
 out/
 node_modules/
+*.bundle.mjs
+storyDemoData.mjs
