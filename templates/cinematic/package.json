@@ -6,8 +6,9 @@
   "description": "Standalone test harness for the cinematic starter. Versions match the verified project stack.",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
-    "still": "node render-stills.mjs index.ts CinematicPOC out/poc_ 0,150,299 0.5",
-    "render": "remotion render index.ts CinematicPOC out/cinematic-poc.mp4 --codec h264 --crf 18"
+    "check-assets": "node check-assets.mjs",
+    "still": "node render-stills.mjs index.ts CinematicPOC out/poc_ 0,75,150,225,299 0.5",
+    "render": "remotion render index.ts CinematicPOC out/cinematic-poc.mp4 --gl=angle --codec h264 --crf 18"
   },
   "dependencies": {
     "@react-three/fiber": "8.15.19",
