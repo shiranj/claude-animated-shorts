@@ -1,0 +1,83 @@
+{
+  "project": "cinematic-starter proof of concept",
+  "checked": "2026-11-21",
+  "note": "Binary files are NOT stored in this repository. Download them as described in ASSETS.md and place them under public/cinematic/.",
+  "assets": [
+    {
+      "id": "kaykit-ranger",
+      "name": "Ranger (KayKit Adventurers 2.0 FREE)",
+      "category": "character",
+      "source": "itch.io",
+      "assetPage": "https://kaylousberg.itch.io/kaykit-adventurers",
+      "downloadUrl": "https://kaylousberg.itch.io/kaykit-adventurers (\"Download Now\", name your own price, file \"Free 2.0\")",
+      "creator": "Kay Lousberg (www.kaylousberg.com)",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseEvidence": "Itch.io page field \"Asset license: Creative Commons Zero v1.0 Universal\"; License.txt inside the zip: \"free to use in personal, educational and commercial projects\"; credit \"Kay Lousberg, www.kaylousberg.com\" is optional.",
+      "attributionRequired": false,
+      "archive": "KayKit_Adventurers_2.0_FREE.zip",
+      "archiveSha256": "abe48f4763fba0896bab486ee9e6d08ca6b5b3884b9601f235c8847ae94dc479",
+      "modifications": ["scaled to a target height at load time", "materials: environment-map intensity adjusted at load time"],
+      "localPath": "public/cinematic/characters/Ranger.glb",
+      "fileInZip": "KayKit_Adventurers_2.0_FREE/Characters/gltf/Ranger.glb",
+      "technical": "GLB, about 485 KB, 8,900 triangles, 1 skin with 23 bones (Rig_Medium), 1 embedded 1024x1024 gradient texture, no animation clips of its own",
+      "redistribution": "CC0 allows it. This repository still does not commit the file; the creator asks users not to resell unmodified copies."
+    },
+    {
+      "id": "kaykit-rig-medium-animations",
+      "name": "Rig_Medium animation files (included in the same zip)",
+      "category": "animation",
+      "source": "itch.io",
+      "assetPage": "https://kaylousberg.itch.io/kaykit-adventurers",
+      "creator": "Kay Lousberg (www.kaylousberg.com)",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseEvidence": "Same zip and License.txt as above.",
+      "attributionRequired": false,
+      "archive": "KayKit_Adventurers_2.0_FREE.zip",
+      "archiveSha256": "abe48f4763fba0896bab486ee9e6d08ca6b5b3884b9601f235c8847ae94dc479",
+      "modifications": [],
+      "localPath": "public/cinematic/animations/",
+      "filesInZip": ["KayKit_Adventurers_2.0_FREE/Animations/gltf/Rig_Medium/Rig_Medium_General.glb", "KayKit_Adventurers_2.0_FREE/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb"],
+      "technical": "General: 15 clips (Idle_A, Idle_B, Hit, Death, Interact ...). MovementBasic: 11 clips (Walking_A/B/C, Running_A/B, Jump_*). Clips are in place (no root motion); walk cycle Walking_A is 1.067 s."
+    },
+    {
+      "id": "polyhaven-forrest-ground-03",
+      "name": "Forest Ground 03 (1k diffuse, normal GL, roughness)",
+      "category": "material",
+      "source": "Poly Haven",
+      "assetPage": "https://polyhaven.com/a/forrest_ground_03",
+      "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/forrest_ground_03/",
+      "creator": "Rob Tuytel",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "licenseEvidence": "polyhaven.com/license: \"Our assets are all licensed as CC0 ... You can redistribute them\".",
+      "attributionRequired": false,
+      "files": {
+        "forrest_ground_03_diff_1k.jpg": "0a63f012ae0e3663451b5a0e5049975a",
+        "forrest_ground_03_nor_gl_1k.jpg": "9f44096b43a0f796ae6f52d7fe784698",
+        "forrest_ground_03_rough_1k.jpg": "99b60c4ba1dc799e8eddf6e2f1460c09"
+      },
+      "filesHashAlgorithm": "md5",
+      "modifications": ["tiled and tinted at load time"],
+      "localPath": "public/cinematic/polyhaven/"
+    },
+    {
+      "id": "polyhaven-spruit-dawn",
+      "name": "Spruit Dawn HDRI (1k)",
+      "category": "hdri",
+      "source": "Poly Haven",
+      "assetPage": "https://polyhaven.com/a/spruit_dawn",
+      "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/spruit_dawn_1k.hdr",
+      "creator": "Greg Zaal",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "licenseEvidence": "polyhaven.com/license, as above.",
+      "attributionRequired": false,
+      "files": { "spruit_dawn_1k.hdr": "833f35579506bc7b51b8f94a42a5d866" },
+      "filesHashAlgorithm": "md5",
+      "modifications": ["used for image-based lighting only; not shown as the background"],
+      "localPath": "public/cinematic/polyhaven/spruit_dawn_1k.hdr"
+    }
+  ]
+}

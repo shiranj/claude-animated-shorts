@@ -1,0 +1,4 @@
+# Downloaded assets and render output stay local
+public/
+out/
+node_modules/

@@ -1,67 +1,70 @@
-# Cinematic proof of concept — The Lantern at Dawn
+# Cinematic starter: animated character in a forest trail
 
-A 10-second, 1080x1920 vertical scene to validate the new cinematic stylized-3D direction.
+A 10-second, 1080x1920, 30 fps vertical shot. It proves the cinematic pipeline end to end: a rigged, animated GLB character, a layered environment, motivated lighting, a tracking camera, and a deterministic Remotion render.
 
-## What the shot tests
+The scene is only an **example**. The reusable parts are `AnimatedCharacter.tsx`, `useAsset.ts` and `ForestEnvironment.tsx`; the story lives in `CinematicPOC.tsx`.
 
-- A custom stylized 3D traveller with layered clothing, belt, satchel, face details and a lantern.
-- A layered mountain / pine-forest environment with foreground rocks and distant silhouettes.
-- A slow camera push with a slight change in framing.
-- A gradual dawn lighting transition and a motivated lantern glow.
-- Deterministic frame-based animation at 30 fps.
+## Files
 
-The character and environment in this first technical proof of concept are procedural Three.js geometry. This keeps the test fully free and self-contained. They are **prototype assets**, not the final quality ceiling. The next iteration should replace the hero character and selected environment elements with polished, licence-verified free GLB assets or custom Blender models.
+| File | Purpose |
+|---|---|
+| `CinematicPOC.tsx` | The example shot: timeline, camera, lights, composition. Edit this for a new shot. |
+| `AnimatedCharacter.tsx` | Reusable. Plays GLB animation clips from the Remotion frame number, with blending and bone attachments. |
+| `ForestEnvironment.tsx` | Reusable trail environment: trees, rocks, grass, path, light shafts, dust, HDRI lighting. |
+| `useAsset.ts` | Loads GLB, textures and HDR files and pauses the render until they are ready. Missing files do not crash. |
+| `ASSETS.md` | **Read first.** Where to get the free assets and where to put them. |
+| `asset-manifest.json`, `ASSET_CREDITS.md` | Source, creator, licence and checksum of every external asset. |
+| `check-assets.mjs` | Tells you which asset files are missing or damaged. |
+| `render-stills.mjs` | Renders still frames of any composition for quick review. |
+| `index.ts`, `Root.tsx`, `tsconfig.json`, `package.json` | Minimal Remotion test setup. This is not a full app. |
 
-## Standalone test setup (P0)
+## Quick start
 
-This folder now contains a minimal test harness: `index.ts`, `Root.tsx`, `tsconfig.json`, `package.json` (pinned versions) and `render-stills.mjs`. It does not turn the repository into an app. Use it one of two ways:
+1. **Get the assets** (free, about 15 MB to download): follow [ASSETS.md](ASSETS.md). They go in `public/cinematic/` and are not stored in this repository.
+2. **Use a Remotion project that already works.** Required versions (tested): Remotion 4.0.250, three 0.160.1, @react-three/fiber 8.15.19, React 18.3.1, TypeScript 5.5.4, plus `@types/three` 0.160.0. Copy this folder into the project (for example `src/cinematic/`) and put `public/cinematic/` in the project's `public/` folder. In a new folder, `npm install` uses the pinned `package.json`.
+3. **Check:**
+   ```bash
+   node check-assets.mjs        # assets present?
+   npx tsc -p tsconfig.json     # types ok?
+   ```
+4. **Preview stills** (about 3 s each at half size):
+   ```bash
+   node render-stills.mjs index.ts CinematicPOC out/poc_ 0,75,150,225,299 0.5
+   ```
+   Set `CHROME_PATH` if Chrome is not found, and `REMOTION_TMP` to a folder on a big drive (each bundle copies `public/`).
+5. **Render the 10-second MP4:**
+   ```bash
+   npx remotion render index.ts CinematicPOC out/cinematic-poc.mp4 --gl=angle --codec h264 --crf 18
+   ```
+   To use it in your own project, copy the `<Composition>` from `Root.tsx` into your `Root.tsx`.
 
-1. **In an existing Remotion project** (recommended): copy this folder into `src/`, or copy `CinematicPOC.tsx` and register the composition as shown below. Then run `node render-stills.mjs index.ts CinematicPOC out/poc_ 0,150,299 0.5` from the folder that has `node_modules`.
-2. **Fresh folder**: copy this folder somewhere, run `npm install`, then `npm run typecheck` and `npm run still`.
+## How the animation is driven by Remotion
 
-Optional environment variables for `render-stills.mjs`: `CHROME_PATH`, `REMOTION_TMP`, `REMOTION_PUBLIC`.
+- Everything is a function of `useCurrentFrame()`. Nothing uses the wall clock, `useFrame`, or state that carries over between frames.
+- Character pose: `AnimationMixer.setTime(frame / fps)` resets all actions to time 0 and applies the time, so the pose never accumulates. Two clips (walk, idle) are blended by weights that are computed from the frame.
+- Position along the path is summed from frame 0 every time, camera and light are pure functions of the frame, and scenery uses fixed random seeds.
+- Verified: frame 150 rendered on its own is pixel-identical to frame 150 rendered after frames 0 to 149 in order.
 
-Verified (P0): type-check passes and stills render with Remotion 4.0.250, three 0.160.1, R3F 8.15.19. See `docs/p0-results/` for before and after stills.
+## Measured on the development PC (Windows 11, Chrome with ANGLE/GPU)
 
-## Integration
+- Type-check: passes, no errors.
+- Stills: about 3 s each at half size.
+- Full 300-frame MP4 at 1080x1920: **40 s** to render, 32.8 MB (h264, crf 18).
+- Peak memory: about **3 GB** above the idle level for Node and Chrome together.
+- Frame QA (`templates/scripts/short_qa.py`): no black, white, frozen or jumping frames.
 
-This file is designed to be copied into the user's Remotion project. It relies on the existing skill stack:
+Other machines will differ. 2K renders and longer videos were not tested.
 
-- Remotion
-- `@remotion/three`
-- `three`
-- `@react-three/fiber`
-- React
+## Known limitations
 
-Copy `CinematicPOC.tsx` into your Remotion source tree. Then register the composition in `src/Root.tsx`:
+- The character is a stylized chibi low-poly figure (KayKit Ranger, about 8,900 triangles, one gradient texture). It is much better than primitive shapes, but it is not feature-film quality. Most of the cinematic feel comes from light, fog, depth and camera.
+- Walking speed is set from the measured stance-foot speed of the `Walking_A` clip, but residual foot drift was measured in Node on the skeleton only (frames 0 to 185): a planted foot still moves at a median of about 0.11 units/s (character speed 0.45, height 1.6), and a different speed between 0.40 and 0.50 does not make it clearly better. It was not checked in the final video. Watch the feet, especially during the slow-down (frames 185 to 225).
+- No facial animation, lip-sync, cloth simulation or ambient occlusion pass. Soft contact is faked with a shadow disc and a shadow-casting sun.
+- Trees, rocks, grass and the lantern are simple generated shapes, not scanned assets. Heavy photoscanned trees (hundreds of MB) are not practical here.
+- No audio, music or narration in this shot. The MP4 has Remotion's silent audio track.
+- Only one character, one location and one shot have been built.
+- Tested only with the package versions above and on Windows.
 
-```tsx
-import { Composition } from "remotion";
-import { CinematicPOC, CINEMATIC_POC_CONFIG } from "./CinematicPOC";
+## If an asset is missing
 
-// Inside your existing Remotion root:
-<Composition
-  id={CINEMATIC_POC_CONFIG.id}
-  component={CinematicPOC}
-  durationInFrames={CINEMATIC_POC_CONFIG.durationInFrames}
-  fps={CINEMATIC_POC_CONFIG.fps}
-  width={CINEMATIC_POC_CONFIG.width}
-  height={CINEMATIC_POC_CONFIG.height}
-/>
-```
-
-Render:
-
-```bash
-npx remotion render src/index.ts CinematicPOC out/cinematic-poc.mp4 --codec h264 --crf 18
-```
-
-Render representative stills at frames 0, 90, 180 and 299 before judging the full video. Check both full-frame and phone-size readability.
-
-## Known limitations in this first pass
-
-- It is a visual-system prototype, not a finished short with narration and sound.
-- The traveller is assembled from procedural meshes; facial animation, hand articulation and cloth simulation are not included.
-- The distant mountain silhouettes and trees are deliberately simplified.
-- No external assets are downloaded. The next pass should test a CC0 character and environment asset, with its licence captured in the manifest.
-- The source repository is a skill/template repository rather than the user's complete Remotion app, so the final render must be run in the local Remotion project where the dependencies and Remotion root are installed.
+The shot still renders. A missing character shows a red placeholder figure, a missing ground texture falls back to flat colours, and the browser console names the missing file. Run `node check-assets.mjs`.
