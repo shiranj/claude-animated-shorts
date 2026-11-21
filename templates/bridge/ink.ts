@@ -263,7 +263,7 @@ export class InkPass extends Pass {
       uniforms: { tCut: { value: null }, cut: { value: 0 }, cutUv: { value: new THREE.Matrix3() } },
     });
     // per object: copy the original material's cut-out (map + alphaTest) so alpha-tested world planes keep their shape
-    this.normalMat.onBeforeRender = (_r, _s, _c, _g, object, group) => {
+    (this.normalMat as unknown as { onBeforeRender: (r: unknown, s: unknown, c: unknown, g: unknown, object: THREE.Object3D, group: unknown) => void }).onBeforeRender = (_r, _s, _c, _g, object, group) => {
       const mat = (object as THREE.Mesh).material as THREE.Material | THREE.Material[];
       const gi = (group as unknown as { materialIndex?: number } | null)?.materialIndex ?? 0; // geometry group at runtime
       const src = (Array.isArray(mat) ? mat[gi] : mat) as THREE.MeshLambertMaterial;

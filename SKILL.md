@@ -188,6 +188,7 @@ lighting 5-6, ink 6, textures 5-6, characters 7, depth 6-7, composition 6-7 (fro
 5. Contracts between owners live in exported constants (e.g. `NOINK` layer from ink.ts, `dofAt`/`FOREGROUND` from story.ts, `LIGHTS`/`LOOK` from lights.ts). Changing a contract means telling every owner that reads it.
 
 ## Gotchas
+- **Tone mapping version:** the bridge post chain asks for `ToneMappingMode.NEUTRAL`, which only exists in newer `postprocessing` releases. On 6.34.x it is `undefined` and the effect silently uses AGX. `templates/bridge/Bridge.tsx` now exports `TONE_MODE`, which picks NEUTRAL when it exists and AGX otherwise, so output on 6.34.3 is unchanged (verified pixel-identical on two frames). Pin `postprocessing` and re-check the look before upgrading.
 - Kenney nature-kit materials are teal: recolour them by material name in build.ts.
 - Cameras end up inside houses: the sight-line culler in build.ts/world.ts removes anything blocking any camera ray.
 - Ink in the same merged effect pass as DOF gets overwritten. Ink must be its own pass before the blur.

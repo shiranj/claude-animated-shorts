@@ -48,7 +48,7 @@ const toLambert = (m: THREE.Material) => {
 // ---------------- geometry pieces ----------------
 const f32 = (a: THREE.BufferAttribute | THREE.InterleavedBufferAttribute) => {
   const out = new Float32Array(a.count * a.itemSize);
-  for (let i = 0; i < a.count; i++) for (let k = 0; k < a.itemSize; k++) out[i * a.itemSize + k] = a.getComponent(i, k);
+  for (let i = 0; i < a.count; i++) for (let k = 0; k < a.itemSize; k++) out[i * a.itemSize + k] = k === 0 ? a.getX(i) : k === 1 ? a.getY(i) : k === 2 ? a.getZ(i) : a.getW(i); // getX..getW work for both buffer and interleaved attributes
   return new THREE.Float32BufferAttribute(out, a.itemSize);
 };
 /** quad a,b,c,d counter-clockwise seen from its front; uv (u0,v0) at a, (u1,v1) at c */

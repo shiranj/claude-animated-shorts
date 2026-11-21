@@ -29,9 +29,14 @@ const toggles = (): PostToggles => ({ ink: true, lens: true, pre: true, bloom: t
 /** Bloom for emissive sources only (depth.md 6.4). Its MIP chain always starts at 540x960 (half of 1080x1920),
  *  whatever the output size, so the glow keeps the same size relative to the frame (e-fold ~30 px at 1080p,
  *  ~1.5 % of the frame height) at 540, 1080 and 1440 widths. ADD blend: HDR-safe (SCREEN darkens values > 1). */
+/** NEUTRAL tone mapping only exists in newer postprocessing releases. In 6.34.x `ToneMappingMode.NEUTRAL` is undefined and the
+ *  effect silently falls back to AGX, so we name that fallback explicitly. Behaviour is unchanged on 6.34.x, and newer versions use NEUTRAL as intended. */
+export const TONE_MODE: ToneMappingMode = (ToneMappingMode as unknown as Record<string, ToneMappingMode | undefined>).NEUTRAL ?? ToneMappingMode.AGX;
+
 const makeBloom = () => {
   const b = new BloomEffect({ blendFunction: BlendFunction.ADD, intensity: 0.5, luminanceThreshold: 1.0, luminanceSmoothing: 0.2, mipmapBlur: true, levels: 6, radius: 0.6 });
-  const mip = b.mipmapBlurPass;
+  // mipmapBlurPass exists at runtime but is missing from some postprocessing typings
+  const mip = (b as unknown as { mipmapBlurPass: { setSize(w: number, h: number): void } }).mipmapBlurPass;
   const setSize = mip.setSize.bind(mip);
   mip.setSize = (w: number, h: number) => setSize(Math.round((1920 * w) / Math.max(h, 1)), 1920);
   return b;
@@ -56,20 +61,20 @@ const Inner: React.FC<{ id: number; kit: Kit }> = ({ id, kit }) => {
     ink: new InkPass(scene, camera as THREE.PerspectiveCamera),
     lens: new LensBlur({ maxCoC: 24, nearScale: 1.2 }),
     bloom: makeBloom(),
-    tone: new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL }),
+    tone: new ToneMappingEffect({ mode: TONE_MODE }),
     grade: new GradeEffect(GRADES.day, GRADE_STRENGTH.day),
     grain: new GrainEffect({ amount: 0.025, cellPx: 1.5 }), // film grain, OFF by default (inputProps post.grain): the reference measures no grain and it quadruples the file size
   }), [camera, scene]);
   useEffect(() => () => fx.ink.dispose(), [fx]);
   const post = useMemo(() => (
     <EffectComposer multisampling={4}>
-      {on.ink ? <primitive object={fx.ink} dispose={null} /> : null}
-      {on.lens && on.pre ? <primitive object={fx.lens.pre} dispose={null} /> : null}
-      {on.lens ? <primitive object={fx.lens.main} dispose={null} /> : null}
-      {on.bloom ? <primitive object={fx.bloom} dispose={null} /> : null}
+      {on.ink ? <primitive object={fx.ink} dispose={null} /> : <></>}
+      {on.lens && on.pre ? <primitive object={fx.lens.pre} dispose={null} /> : <></>}
+      {on.lens ? <primitive object={fx.lens.main} dispose={null} /> : <></>}
+      {on.bloom ? <primitive object={fx.bloom} dispose={null} /> : <></>}
       <primitive object={fx.tone} dispose={null} />
-      {on.grade ? <primitive object={fx.grade} dispose={null} /> : null}
-      {on.grain ? <primitive object={fx.grain} dispose={null} /> : null}
+      {on.grade ? <primitive object={fx.grade} dispose={null} /> : <></>}
+      {on.grain ? <primitive object={fx.grain} dispose={null} /> : <></>}
     </EffectComposer>
   ), [fx, on]);
   const cam = camera as THREE.PerspectiveCamera;
