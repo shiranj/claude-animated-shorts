@@ -10,5 +10,6 @@
     "lib": ["DOM", "ES2022"],
     "types": []
   },
-  "include": ["*.ts", "*.tsx", "animation/*.ts"]
+  "include": ["*.ts", "*.tsx", "animation/*.ts", "camera/*.ts"],
+  "exclude": ["check-shots.ts", "*.bundle.mjs"]
 }
