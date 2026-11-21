@@ -2,7 +2,7 @@ import * as THREE from "three";
 import type { PoseContext, PoseLayer } from "../AnimatedCharacter";
 import { DEG, clamp, ease, lerp, wrapPi } from "./math";
 import { HAND_POSES, applyHandPose, mixPose, type HandPose } from "./hands";
-import { applyFace, type FaceParams } from "./face";
+import { applyFace, blinkStarts, type FaceParams } from "./face";
 import { aimBone, rotateBoneAxis, solveTwoBone, worldPos } from "./rigtools";
 import { evaluate, locoChain, type CharacterScript, type Emotion, type FrameEnv, type FrameState, type Hand } from "./script";
 
@@ -155,10 +155,11 @@ export type Performance = {
 };
 
 /** Builds the pose layers for a script. `env` is the scene's target table and the character's foot-locked motion. Keep the result in useMemo. */
-export const createPerformance = (script: CharacterScript, env: FrameEnv, extras?: { mouth?: (ctx: PoseContext, p: FaceParams) => void }): Performance => {
+export const createPerformance = (script: CharacterScript, env: FrameEnv, extras?: { mouth?: (ctx: PoseContext, p: FaceParams) => void; /** Seed for this character's blink schedule. Give each character a different one. */ blinkSeed?: number }): Performance => {
   const chain = locoChain(script);
   let lastFrame = NaN, last: FrameState | null = null;
   const stateAt = (frame: number) => { if (frame !== lastFrame || !last) { last = evaluate(script, chain, frame, env); lastFrame = frame; } return last; };
+  const blinks = blinkStarts(extras?.blinkSeed ?? 7);
   const hands: Record<Hand, HandPose> = { left: HAND_POSES.relaxed, right: HAND_POSES.relaxed };
 
   const posture: PoseLayer = (ctx) => {
@@ -187,7 +188,7 @@ export const createPerformance = (script: CharacterScript, env: FrameEnv, extras
     hands.left = solveArm(ctx, "left", st); hands.right = solveArm(ctx, "right", st);
   };
   const fingers: PoseLayer = (ctx) => { applyHandPose(ctx, "l", hands.left); applyHandPose(ctx, "r", hands.right); };
-  const face: PoseLayer = (ctx) => { const st = stateAt(ctx.frame); applyFace(ctx, st, extras?.mouth ? (p) => extras.mouth!(ctx, p) : undefined); };
+  const face: PoseLayer = (ctx) => { const st = stateAt(ctx.frame); applyFace(ctx, st, extras?.mouth ? (p) => extras.mouth!(ctx, p) : undefined, blinks); };
   void lerp;
   return { stateAt, layers: [posture, gaze, arms, fingers, face] };
 };

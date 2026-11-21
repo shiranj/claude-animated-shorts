@@ -51,7 +51,7 @@ export const faceFor = (emotions: Partial<Record<Emotion, number>>): FaceParams 
 };
 
 /* ---------- blinking: seeded, so the same frame always blinks the same ---------- */
-const blinkStarts = (seed: number, frames = 4000) => {
+export const blinkStarts = (seed: number, frames = 4000) => {
   const rnd = mulberry32(seed), starts: number[] = [];
   for (let f = 40 + Math.floor(rnd() * 40); f < frames; f += 70 + Math.floor(rnd() * 90)) {
     starts.push(f);
@@ -128,13 +128,14 @@ const eyeAngles = (ctx: PoseContext, eye: RigidPart, items: LookItem[], heading:
 };
 
 /** Puts the eyes, eyelids and eyebrows (and the mouth morphs) in the pose for this frame. */
-export const applyFace = (ctx: PoseContext, state: FrameState, mouth?: (p: FaceParams) => void) => {
+/** `blink` is this character's own blink schedule (see blinkStarts), so two characters do not blink together. */
+export const applyFace = (ctx: PoseContext, state: FrameState, mouth?: (p: FaceParams) => void, blink: number[] = BLINK_STARTS) => {
   const rig = faceRig(ctx);
   if (!rig) return;
   const p = faceFor(state.emotions);
   // Blink, but not while the eyes are wide with surprise or fear.
-  const blink = blinkAt(ctx.frame) * (1 - clamp((p.lidEdge - 40) / 14));
-  const lid = lerp(p.lidEdge, -42, blink);
+  const closed = blinkAt(ctx.frame, blink) * (1 - clamp((p.lidEdge - 40) / 14));
+  const lid = lerp(p.lidEdge, -42, closed);
   for (const l of rig.lids) l.pivot.rotation.set((-15 - lid) * DEG, 0, 0);
   for (const eye of [rig.eyeL, rig.eyeR]) {
     if (!eye) continue;
