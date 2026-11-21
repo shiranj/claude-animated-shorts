@@ -68,6 +68,8 @@ It lists each file as `OK` or `MISSING` and compares every file with its recorde
 
 ## Notes
 
+- **2K textures are the default from P2.** After `check-assets.mjs`, run `python downscale-textures.py <copy of public/cinematic/characters> 2048`. Keep the 4K originals if you want them.
+
 - Three character textures are 4096x4096. Each render tab decodes its own copy, and the full render used about 10 GB more memory than an idle PC. Running `python downscale-textures.py <copy of public/cinematic/characters> 2048` on a copy cut this to about 6 GB with no visible difference (mean change 1.5 of 255). The checker's checksums only match the original files, so run the checker before downscaling.
 - The Standard base-character kit has only the "Superhero" bodies. We use only its head, so body proportions come from the outfit (Regular) body. The head and the outfit's hands use different "Dark" skin textures; the tones are close but not identical.
 - Hair colour: the kit's hair texture is a grey palette meant to be tinted. `HAIR_TINT` in `CinematicPOC.tsx` makes it brown.

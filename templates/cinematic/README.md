@@ -14,6 +14,7 @@ The scene is only an **example**. The reusable parts are `AnimatedCharacter.tsx`
 | `useAsset.ts` | Loads GLB, textures and HDR files and pauses the render until they are ready. Missing files do not crash. |
 | `Lantern.ts`, `Backpack.ts` | Procedural props (hand lantern with a light, traveller's backpack). |
 | `ForestEnvironment.tsx` | Reusable trail environment: trees, rocks, grass, ferns, flowers, path, light shafts, dust, HDRI lighting. |
+| `animation/`, `AnimationDemo.tsx`, `demoScript.ts`, `props.ts`, `SceneKit.tsx` | **P2.** Typed story script, pose layers (look-at, hands, arms, face), the 14 s demo. See [ANIMATION.md](ANIMATION.md). |
 | `ASSETS.md` | **Read first.** Where to get the free assets and where to put them. |
 | `asset-manifest.json`, `ASSET_CREDITS.md` | Source, creator, licence and checksum of every external asset. |
 | `check-assets.mjs` | Tells you which asset files are missing or damaged. |
@@ -35,11 +36,17 @@ The scene is only an **example**. The reusable parts are `AnimatedCharacter.tsx`
    node render-stills.mjs index.ts CinematicPOC out/p_ 0,75,150,225,299 1
    ```
    Set `CHROME_PATH` if Chrome is not found, and `REMOTION_TMP` to a folder on a big drive (each bundle copies `public/`).
-5. **Render the 10-second MP4:**
+5. **Render the 14-second animation demo (P2):**
+   ```bash
+   npx remotion render index.ts AnimationDemo out/animation-demo.mp4 --gl=angle --codec h264 --crf 18
+   ```
+6. **Render the 10-second MP4 (P1.1 shot):**
    ```bash
    npx remotion render index.ts CinematicPOC out/cinematic-poc.mp4 --gl=angle --codec h264 --crf 18
    ```
    To use it in your own project, copy the `<Composition>` from `Root.tsx` into your `Root.tsx`.
+
+**Textures: use 2K by default.** Run `python downscale-textures.py <copy of public/cinematic/characters> 2048` once (after `check-assets.mjs`). 4K is optional and needs about 4 GB more memory.
 
 **Memory:** with the original 4K textures the render used about 10 GB more than an idle PC. After `python downscale-textures.py <copy of public/cinematic/characters> 2048` it used about 6 GB more, with no visible difference (see Measured results). Do this on a copy; the script rewrites files in place.
 
@@ -68,11 +75,28 @@ The scene is only an **example**. The reusable parts are `AnimatedCharacter.tsx`
 - 4K versus 2K textures: frame 225 differs by a mean of 1.5 of 255 (99th percentile 8); face and clothing look the same.
 - Other machines will differ. 2K video output and long videos were not tested.
 
+## P2: character animation demo (`AnimationDemo`, 14 s, 420 frames)
+
+Same traveller and forest, directed by `demoScript.ts`: stands, walks and curves, stops, notices a glowing crystal, is startled, points at it, then smiles at the camera. Measured on the same development PC with 2K textures:
+
+| Check | Result |
+|---|---|
+| Type-check | pass |
+| Full 420-frame MP4 (1080x1920, 30 fps) | 54 s, 42.5 MB, no black, white or frozen frames |
+| Frame 300 alone vs after frames 290 to 299 | identical (same SHA-256) |
+| Peak memory (all Node, Chrome, ffmpeg processes) | 13.7 GB with about 6.2 GB already in use before the render |
+| Foot drift of a planted foot, start of the walk | median 0.084 m/s, max 0.28 |
+| Foot drift, walking and curving | median 0.030 m/s, max 0.18 |
+| Foot drift, slowing to a stop | median 0.088 m/s, max 0.24 |
+| Foot drift, standing | exactly 0 |
+
+The start (frame 32) and stop (frame 130, 42-frame blend) were chosen by sweeping, because the point of the step cycle where the walk starts or stops changes the drift a lot (the first guess gave 0.19 and 0.22 m/s). Drift was measured in Node on the skeleton with the path including the turn, not on the video.
+
 ## Known limitations
 
 - The head and the outfit come from two Quaternius kits. The free base kit has only "Superhero" bodies, so we use only its head; the head and the outfit hands use two different "Dark" skin textures, which are close but not identical. Hair colour is a tint on a grey texture.
-- No facial animation (the eyes do not blink or look around), no cloth or cape physics, no ambient-occlusion pass. The hood puts the face in soft shadow.
-- The hands are closed fists in the walk clip, so the lantern hangs from a fist. The backpack and its straps are approximate; the straps can read as loops behind the hood from some angles.
+- Faces: P2 adds blinking, eye direction, eyebrows and a simple mouth (see ANIMATION.md). No speech mouth shapes. No cloth or cape physics, no ambient-occlusion pass. The hood puts the face in soft shadow.
+- Hands: P2 replaces the clip fists with relaxed fingers and a loose lantern grip (see ANIMATION.md). The backpack and its straps are approximate; the straps can read as loops behind the hood from some angles.
 - Trees, rocks, grass, flowers and logs are generated shapes with smooth shading and colour variation. They are much softer than P1 but are not scanned assets (the free scanned trees are hundreds of MB).
 - Memory use is high with the 4K textures (see above).
 - No audio, music or narration. The MP4 has Remotion's silent audio track.
