@@ -1,0 +1,40 @@
+{
+ "video": "out/two.mp4",
+ "info": {
+  "codec": "h264",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30.0,
+  "frames": 180,
+  "duration_s": 6.059,
+  "size_mb": 16.3,
+  "pix_fmt": "yuvj420p",
+  "has_audio": true
+ },
+ "frames_analysed": 180,
+ "brightness": {
+  "min": 105.5,
+  "max": 113.9,
+  "mean": 109.6
+ },
+ "frame_difference": {
+  "median": 1.12,
+  "max": 2.22
+ },
+ "problems": [],
+ "warnings": [
+  "Manual review needed: open mobile-preview.jpg and mobile-preview-2.jpg (real phone size). Check that the character, the face, the prop and the subject-versus-background separation are readable. This tool does not judge them."
+ ],
+ "render": {
+  "ok": true,
+  "composition": "TwoCharacterTest",
+  "frames": 180,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "concurrency": 4,
+  "renderSeconds": 33.2,
+  "totalSeconds": 34.7,
+  "peakMB": 6236
+ }
+}

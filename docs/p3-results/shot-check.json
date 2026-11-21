@@ -1,0 +1,43 @@
+{
+ "perShot": {
+  "establishing": {
+   "frames": 120,
+   "minHeadMargin": 0.33807252460839743,
+   "maxHeadPx": 128.82809055067835,
+   "minHeadPx": 70.65245611665394
+  },
+  "tracking": {
+   "frames": 112,
+   "minHeadMargin": 0.05610398460670063,
+   "maxHeadPx": 363.73150191261533,
+   "minHeadPx": 128.87930819338254
+  },
+  "over-shoulder": {
+   "frames": 52,
+   "minHeadMargin": 0.7130750576088853,
+   "maxHeadPx": 0,
+   "minHeadPx": 1000000000
+  },
+  "reaction": {
+   "frames": 66,
+   "minHeadMargin": 0.13810580123817928,
+   "maxHeadPx": 843.1006836636851,
+   "minHeadPx": 792.432244331833
+  },
+  "lantern": {
+   "frames": 100,
+   "minHeadMargin": 0.02078276331418194,
+   "maxHeadPx": 843.1381991042905,
+   "minHeadPx": 419.97375781606695
+  },
+  "final": {
+   "frames": 91,
+   "minHeadMargin": 0.2860931893592561,
+   "maxHeadPx": 173.0429636346301,
+   "minHeadPx": 141.71381388590046
+  }
+ },
+ "issues": [],
+ "maxCameraStepPerFrame": 0.09657907388942333,
+ "maxCameraStepFrame": 144
+}
