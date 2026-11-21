@@ -15,6 +15,8 @@ The scene is only an **example**. The reusable parts are `AnimatedCharacter.tsx`
 | `Lantern.ts`, `Backpack.ts` | Procedural props (hand lantern with a light, traveller's backpack). |
 | `ForestEnvironment.tsx` | Reusable trail environment: trees, rocks, grass, ferns, flowers, path, light shafts, dust, HDRI lighting. |
 | `animation/`, `AnimationDemo.tsx`, `demoScript.ts`, `props.ts`, `SceneKit.tsx` | **P2.** Typed story script, pose layers (look-at, hands, arms, face), the 14 s demo. See [ANIMATION.md](ANIMATION.md). |
+| `camera/`, `lighting.tsx`, `story.tsx`, `actors.ts`, `StoryDemo.tsx`, `storyDemoData.ts`, `TwoCharacterTest.tsx`, `post.tsx` | **P3.** Camera shots and presets, lighting presets, the story runtime, the 18 s demo, a two-character test, optional post-processing. See [CINEMATIC.md](CINEMATIC.md). |
+| `check-gpu.mjs`, `render-measured.mjs`, `check-shots.mjs`, `qa-video.py` | **P3.** GPU check, measured render, composition check, video QA. |
 | `ASSETS.md` | **Read first.** Where to get the free assets and where to put them. |
 | `asset-manifest.json`, `ASSET_CREDITS.md` | Source, creator, licence and checksum of every external asset. |
 | `check-assets.mjs` | Tells you which asset files are missing or damaged. |
@@ -92,6 +94,25 @@ Same traveller and forest, directed by `demoScript.ts`: stands, walks and curves
 
 The start (frame 32) and stop (frame 130, 42-frame blend) were chosen by sweeping, because the point of the step cycle where the walk starts or stops changes the drift a lot (the first guess gave 0.19 and 0.22 m/s). Drift was measured in Node on the skeleton with the path including the turn, not on the video.
 
+## P3: cinematic demo (`StoryDemo`, 18 s, 540 frames) and render reliability
+
+Six shots (wide establishing, medium tracking, over-the-shoulder, close-up reaction, lantern interaction, final wide), three lighting looks (night, magical, sunset). Measured on the development PC (Windows 11, Intel Core Ultra 7 255HX, 32 GB, NVIDIA RTX 5060 Ti; 2K textures). Memory is the render's own process tree (Node, Chrome, FFmpeg), measured by `render-measured.mjs`; the P2 figure of 13.7 GB earlier counted the whole PC including 6.2 GB of other programs.
+
+| Check | P2 demo (420 frames, default tabs) | P3 demo (540 frames, 4 tabs) |
+|---|---|---|
+| Render time | 70 s (0.167 s per frame) | 87 s (0.161 s per frame) |
+| Peak memory of the render | 6.9 GB | 4.3 GB (9.4 GB on the very first run, which also builds the bundle) |
+| Tabs vs time vs memory (P3, one run each) | | 2: 90 s, 3.0 GB; 4: 88 s, 4.3 GB; 6: 88 s, 5.6 GB; 10: 89 s, 8.2 GB |
+| Three renders in a row | | 86.9, 86.4, 87.6 s; peaks 9.4 (first, with bundle), 4.3, 4.3 GB; free memory 22.5, 22.7, 22.6 GB before each run: no growth |
+| Two characters (180 frames) | | 33 s, 6.2 GB |
+| Browser GPU | | NVIDIA RTX 5060 Ti (checked with `check-gpu.mjs`) |
+| Composition check | | no issues (heads inside the safe area in every frame, camera at most 2.9 m/s inside a shot) |
+| Video QA | | no automatic problems; black frames only inside the planned fades; large frame changes in 3 ranges (camera moves and the flash), reviewed by eye |
+| Frame 300 alone vs after frames 290 to 299 | identical | 5 of 2.07 million pixels differ (at most 27 of 255, in one small area); alone vs alone is identical. Looks like GPU noise, not visible |
+| Two full renders compared | | mean pixel difference 0.27 of 255 (4 tabs, H.264) |
+
+Post-processing: bloom and SSAO were tested and **not** adopted (grade shift and noise; see CINEMATIC.md).
+
 ## Known limitations
 
 - The head and the outfit come from two Quaternius kits. The free base kit has only "Superhero" bodies, so we use only its head; the head and the outfit hands use two different "Dark" skin textures, which are close but not identical. Hair colour is a tint on a grey texture.
@@ -100,7 +121,8 @@ The start (frame 32) and stop (frame 130, 42-frame blend) were chosen by sweepin
 - Trees, rocks, grass, flowers and logs are generated shapes with smooth shading and colour variation. They are much softer than P1 but are not scanned assets (the free scanned trees are hundreds of MB).
 - Memory use is high with the 4K textures (see above).
 - No audio, music or narration. The MP4 has Remotion's silent audio track.
-- One character, one location and one shot. Tested only with the package versions above and on Windows.
+- One location. Two characters were tested only in a 6 s scene. Tested only with the package versions above and on Windows.
+- P3: no real dissolve between shots, no depth of field, no check for hands or props clipping through the body (look at the phone-size sheets). Frame-to-frame results can differ by a few pixels between runs.
 
 ## If an asset is missing
 
