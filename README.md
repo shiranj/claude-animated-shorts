@@ -2,7 +2,7 @@
 
 The free Claude skill from the video **"How to Make Viral Animated Shorts Using Claude (Full Workflow)"**.
 
-It makes 55-70 s vertical animated story shorts: 2D characters in a colourful 3D world, with ink outlines, a painted town, lens blur, gliding cameras, a march score and sound effects. Everything is rendered with three.js inside Remotion on your own PC, with no AI video generator.
+It creates vertical animated Shorts with a cinematic stylized-3D art direction: expressive characters, rich layered environments, motivated lighting, deliberate camera work, narration-synchronised animation and original sound. Everything is rendered with Three.js inside Remotion on your own PC. The original flat-character / painted-toon bridge look remains available as a legacy style.
 
 Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broughton bridge.
 
@@ -13,7 +13,7 @@ Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broug
 | `templates/bridge/` | The full source of the bridge short: world, characters, ink, lens blur, grade, story/camera |
 | `templates/audio/` | The synthesized sound: SFX, march music, the mix with ducking and loudness |
 | `templates/scripts/` | Stills, side-by-side sheets, shot merge and frame-by-frame QA helpers |
-| `references/STYLE_BIBLE.md` | The script and visual formula measured from 20 reference shorts |
+| `references/CINEMATIC_STYLE_BIBLE.md` | Default cinematic visual direction for new projects |\n| `references/FREE_ASSET_POLICY.md` | Free asset sources, licence checks and asset provenance rules |\n| `docs/CINEMATIC_PIPELINE.md` | Cinematic production architecture and phased implementation |\n| `references/STYLE_BIBLE.md` | Original bridge-style research, retained for legacy projects |
 | `references/reports/` | Seven measured reports: motion, depth, textures, characters, lighting, outlines, grade |
 | `references/frames/` | 38 full-size reference frames (540x960) to compare your frames against |
 | `references/sheets/` | 20 contact sheets, one per reference short, 60 frames each (1,200 frames) |
@@ -21,7 +21,7 @@ Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broug
 ## Install
 1. Copy this folder to `~/.claude/skills/cartoon-3d-short/` (clone it there, or download the ZIP).
 2. You need [Remotion](https://www.remotion.dev/) with `@remotion/three`, plus Node, Python 3 and ffmpeg.
-3. In Claude Code, say: *"Use the cartoon short skill and make a short about …"*.
+3. In Claude Code, say: *"Use the cinematic animated short skill and make a short about …"*. The default style is cinematic stylized 3D. Ask explicitly for the original bridge style when you want the legacy flat-character look.
 
 Claude then follows `SKILL.md`: topic and facts, then script, then voice, then the shot plan in `story.ts`, then stills, then renders. Agents check your frames against the reports and the frames, and you get the final 2K render and sound mix.
 
