@@ -13,7 +13,10 @@ Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broug
 | `templates/bridge/` | The full source of the bridge short: world, characters, ink, lens blur, grade, story/camera |
 | `templates/audio/` | The synthesized sound: SFX, march music, the mix with ducking and loudness |
 | `templates/scripts/` | Stills, side-by-side sheets, shot merge and frame-by-frame QA helpers |
-| `references/CINEMATIC_STYLE_BIBLE.md` | Default cinematic visual direction for new projects |\n| `references/FREE_ASSET_POLICY.md` | Free asset sources, licence checks and asset provenance rules |\n| `docs/CINEMATIC_PIPELINE.md` | Cinematic production architecture and phased implementation |\n| `references/STYLE_BIBLE.md` | Original bridge-style research, retained for legacy projects |
+| `references/CINEMATIC_STYLE_BIBLE.md` | Default cinematic visual direction for new projects |
+| `references/FREE_ASSET_POLICY.md` | Free asset sources, licence checks and asset provenance rules |
+| `docs/CINEMATIC_PIPELINE.md` | Cinematic production architecture and phased implementation |
+| `references/STYLE_BIBLE.md` | Original bridge-style research, retained for legacy projects |
 | `references/reports/` | Seven measured reports: motion, depth, textures, characters, lighting, outlines, grade |
 | `references/frames/` | 38 full-size reference frames (540x960) to compare your frames against |
 | `references/sheets/` | 20 contact sheets, one per reference short, 60 frames each (1,200 frames) |
