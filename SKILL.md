@@ -1,9 +1,54 @@
 ---
 name: cartoon-3d-short
-description: Make a ~55-70 s vertical cartoon story short in the "2D characters in a colourful 3D world" style (flat bean-head cartoon cards with ink outlines, painted 3D town/world with black ink lines, saturated sky, depth-of-field backgrounds, gliding cameras, voice narration, synthesized SFX + march-style music), rendered with three.js inside Remotion. Proven on "The Bridge That Fell for a Song" (2026-10-31). Use when the user asks for another video "like the bridge video", "like the soldiers/bridge short", "in that cartoon 3D style", a history/science story short with cartoon characters in 3D, or says "use the cartoon short skill".
+description: Create cinematic stylized-3D vertical animated Shorts with Remotion and Three.js, using expressive reusable characters, detailed environments, free/licence-verified assets, motivated lighting, cinematic cameras, narration-synchronised scenes, original audio and automated QA. Retains a legacy flat-character 3D-toon mode for bridge-style videos. Use for animated history, science, informative or story Shorts.
 ---
 
-# Cartoon 3D story short (three.js + Remotion)
+# Cinematic animated short (Three.js + Remotion)
+
+> **Default visual mode: Cinematic stylized 3D.** The original flat-character / painted-toon bridge style is retained as an optional legacy mode, not the default for new projects.
+
+## Cinematic production mode (default)
+
+Before planning a new video, read:
+- `references/CINEMATIC_STYLE_BIBLE.md` — visual quality, character, environment, lighting, camera and vertical-composition rules.
+- `references/FREE_ASSET_POLICY.md` — zero-cost asset sourcing, licence verification and asset manifest requirements.
+- `docs/CINEMATIC_PIPELINE.md` — roles, architecture, production phases and rendering profiles.
+
+### Default art direction
+- Aim for premium **stylized cinematic 3D**, not photorealism and not generic flat cartoon cards.
+- Use expressive stylized 3D characters and rich layered 3D environments where suitable.
+- Use free, licence-verified GLB/glTF assets for hero characters, props, materials and environment details when they improve quality. Blender is the preferred free tool for asset preparation and custom edits.
+- Procedural Three.js geometry is appropriate for simple props, blocking and effects; do not use primitive geometry as the final substitute for every important character or environment.
+- Design each story's palette, lighting and camera language around its emotion and setting. Do not force every story into the bridge video's palette or camera grammar.
+- Keep character identity, proportions, clothing, materials and environment continuity consistent between shots.
+- Compose and review at 1080x1920 (9:16), including a phone-size preview.
+- Never use a paid service, paid asset or unclear licence as a hidden dependency. Record every external asset in `asset-manifest.json` and `ASSET_CREDITS.md` with source, creator, licence and attribution notes.
+
+### Production workflow
+1. Research the story and write a sourced script.
+2. Create a narration-aligned storyboard. Each shot specifies narration range, purpose, subject/action, location, framing, camera movement, lighting/mood, transition and required assets.
+3. Create a continuity pack for recurring characters, locations, props and colour/light direction.
+4. Search existing project assets and approved free sources. Verify the individual asset licence before download/use. Prefer CC0; CC BY is acceptable when attribution is retained. If rights are unclear, do not use the asset.
+5. Prepare/import assets as optimised GLB/glTF. Record provenance. Use sensible texture sizes, polygon counts and proxy/LOD variants where useful.
+6. Build the scene with reusable React Three Fiber / Three.js components. Keep story-specific animation separate from reusable character, environment, lighting, material and camera systems.
+7. Render representative stills before rendering the full video. Inspect at full-frame and phone size. Fix composition, asset quality, lighting, shadows, contact, continuity and texture issues first; add post effects only after the scene works.
+8. Use deterministic frame-based animation. Keep Remotion responsible for the timeline, narration synchronisation, transitions, audio and final export.
+9. Run TypeScript/build checks and the existing QA scripts. Check visual defects, frozen/black/white frames, audio peaks, duration and sync.
+10. Deliver the final video plus project notes and asset credits.
+
+### Rendering profiles
+- `preview`: reduced resolution/DPR and cheaper effects for iteration; preserve animation and composition.
+- `standard`: production assets and balanced quality for review.
+- `final`: target resolution, final shadows/anti-aliasing/post-processing and audio.
+
+Do not change shot timing, composition or animation between profiles. Only render-quality settings and proxy-vs-final asset detail may change.
+
+### Proof-of-concept rule
+For the first implementation of a new cinematic system, build one 10-second vertical proof of concept before converting the whole skill. It should include one character, one environment, one motivated camera move, a lighting change and a story action. Review rendered stills and a short MP4; measure render time and memory. Do not claim the new look is achieved until the render is inspected.
+
+### Legacy bridge style
+Use `templates/bridge/` only when the user explicitly requests the original bridge / flat-character-in-a-3D-toon-world look, or when maintaining that specific short. Preserve its detailed look values and production notes below. Do not use its bean-head character cards, painted town palette or ink-outline treatment as the default for a new cinematic project.
+
 
 Proven example: **The Bridge That Fell for a Song**. It is an original 67 s short about the 1831 Broughton bridge and 74 soldiers marching in step.
 - Code: `src/videos/bridge/` of your Remotion project (composition `BridgeShort`, 1080x1920, 30 fps).
@@ -80,8 +125,7 @@ User rules that apply:
 11. **Deliver.** SendUserFile the final mp4, update memory, write notes.
 
 ## Final look values (bridge after 4 verifier rounds; all in `templates/bridge/`)
-Start every new short from `templates/bridge/` (copy to `src/videos/<name>/`): the look lives in these values, the
-story lives in story.ts / build.ts layout / cast.ts roles. Opus max scores at the end: colour day 7, golden 5-6,
+For a short explicitly using the legacy bridge style, start from `templates/bridge/` (copy to `src/videos/<name>/`): the look lives in these values, the story lives in story.ts / build.ts layout / cast.ts roles. For new cinematic projects, do not copy this template blindly; first build and validate the cinematic starter described above. Opus max scores at the end: colour day 7, golden 5-6,
 lighting 5-6, ink 6, textures 5-6, characters 7, depth 6-7, composition 6-7 (from 5/3/4/5/4/7/4/6 at the start).
 - **Light presets** (`lights.ts`, sun camera-relative and frozen per shot):
   - day: az 75 / el 48, lit [1.58,1.5,1.33], shade [.30,.29,.36], lift [.05,.06,.11] (cool tint ONLY in shade), sky
