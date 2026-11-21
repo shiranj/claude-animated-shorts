@@ -43,6 +43,9 @@ Before planning a new video, read:
 
 Do not change shot timing, composition or animation between profiles. Only render-quality settings and proxy-vs-final asset detail may change.
 
+### Included cinematic starter
+The first vertical test scene is in `templates/cinematic/CinematicPOC.tsx`. Read `templates/cinematic/README.md` for the composition registration and render command. Copy it into the user's actual Remotion project before rendering; this repository is the skill/template source, not a complete Remotion app. Treat the current procedural traveller and environment as a technical art-direction prototype, then replace hero assets with polished free/licence-verified models in the next pass.
+
 ### Proof-of-concept rule
 For the first implementation of a new cinematic system, build one 10-second vertical proof of concept before converting the whole skill. It should include one character, one environment, one motivated camera move, a lighting change and a story action. Review rendered stills and a short MP4; measure render time and memory. Do not claim the new look is achieved until the render is inspected.
 
