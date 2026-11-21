@@ -1,30 +1,47 @@
 # Assets for the cinematic starter
 
-The repository does **not** contain the 3D character, animations, textures or HDRI. They are free (CC0), but they are binary files, so you download them yourself and put them in your Remotion project's `public/` folder. Exact sources, creators, licences and checksums are in `asset-manifest.json`. Credits are in `ASSET_CREDITS.md`.
+The repository does **not** contain the 3D character, animations, textures or HDRI. They are free (CC0), but they are large binary files (about 70 MB in total), so you download them yourself and put them in your Remotion project's `public/` folder. Exact sources, creators, licences and checksums are in `asset-manifest.json`. Credits are in `ASSET_CREDITS.md`.
 
-If a file is missing, nothing crashes: the scene shows a red placeholder figure (character) or flat colours (ground), and the browser console prints which file is missing.
+If a file is missing, nothing crashes: the scene shows a red placeholder figure (character) or flat colours (ground), and the browser console prints which file is missing. Run `node check-assets.mjs` to see what is missing.
 
 ## Folder layout
 
 ```
 public/cinematic/
-  characters/Ranger.glb
-  animations/Rig_Medium_General.glb
-  animations/Rig_Medium_MovementBasic.glb
-  polyhaven/forrest_ground_03_diff_1k.jpg
-  polyhaven/forrest_ground_03_nor_gl_1k.jpg
-  polyhaven/forrest_ground_03_rough_1k.jpg
-  polyhaven/spruit_dawn_1k.hdr
+  characters/quaternius/
+    Male_Ranger.gltf  Male_Ranger.bin
+    T_Ranger_BaseColor.png  T_Ranger_Normal.png  T_Ranger_ORM.png
+    T_Regular_Male_Dark_BaseColor.png  T_Regular_Male_Normal.png  T_Regular_Male_Roughness.png
+    head/
+      Superhero_Male_FullBody.gltf  Superhero_Male_FullBody.bin
+      Hair_Beard.gltf  Hair_Beard.bin
+      T_Eye_Brown.png  T_Eye_Normal.png  T_Eye_Normal_png.png
+      T_Superhero_Male_Dark.png  T_Superhero_Male_Normal.png  T_Superhero_Male_Roughness.png
+      T_Hair_1_BaseColor.png  T_Hair_1_Normal.png  T_Hair_1_Normal_png.png
+  animations/UAL1_Standard.glb
+  polyhaven/
+    forrest_ground_03_diff_1k.jpg  forrest_ground_03_nor_gl_1k.jpg  forrest_ground_03_rough_1k.jpg
+    spruit_dawn_1k.hdr
 ```
 
-## 1. Character and animations (KayKit Adventurers 2.0, CC0)
+## 1. Character (Quaternius, CC0)
 
-1. Open https://kaylousberg.itch.io/kaykit-adventurers and click **Download Now**. The pack is "name your own price"; the free file is called **Free 2.0** (about 12 MB).
-2. Unzip it. Copy these three files:
-   - `Characters/gltf/Ranger.glb` into `public/cinematic/characters/`
-   - `Animations/gltf/Rig_Medium/Rig_Medium_General.glb` into `public/cinematic/animations/`
-   - `Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb` into `public/cinematic/animations/`
-3. Keep the zip's `License.txt` next to your project notes. It says CC0: free for personal, educational and commercial use; credit "Kay Lousberg, www.kaylousberg.com" is optional.
+Download three free "Standard" packs. On each page click **Download Now** (itch.io is "name your own price") and save the Standard zip. Quaternius's own pages (quaternius.com/packs/...) link to the same files.
+
+| Pack | Page | What we use |
+|---|---|---|
+| Modular Character Outfits - Fantasy [Standard] (about 263 MB) | https://quaternius.com/packs/modularcharacteroutfitsfantasy.html | The `Male_Ranger` outfit: hood, jerkin, belts, bracers, boots, pauldron, hands |
+| Universal Base Characters [Standard] (about 129 MB) | https://quaternius.com/packs/universalbasecharacters.html | The head, eyes and eyebrows of `Superhero_Male`, and the `Hair_Beard` part. The outfit pack has no face. |
+| Universal Animation Library [Standard] (about 16 MB) | https://quaternius.com/packs/universalanimationlibrary.html | 43 animation clips (we use `Walk_Loop` and `Idle_Loop`) |
+
+All three share the same 65-bone "Universal" skeleton, so the clips and parts fit together. Unzip them and copy these files:
+
+- From the outfit zip, folder `Exports/glTF (Godot-Unreal)/Outfits/`: `Male_Ranger.gltf`, `Male_Ranger.bin`, `T_Ranger_BaseColor.png`, `T_Ranger_Normal.png`, `T_Ranger_ORM.png`, `T_Regular_Male_Dark_BaseColor.png`, `T_Regular_Male_Normal.png`, `T_Regular_Male_Roughness.png` into `public/cinematic/characters/quaternius/`.
+- From the base-characters zip, folder `Base Characters/Godot - UE/`: `Superhero_Male_FullBody.gltf`, `Superhero_Male_FullBody.bin`, `T_Eye_Brown.png`, `T_Eye_Normal.png`, `T_Superhero_Male_Dark.png`, `T_Superhero_Male_Normal.png`, `T_Superhero_Male_Roughness.png`, `T_Hair_1_BaseColor.png`, `T_Hair_1_Normal.png` into `public/cinematic/characters/quaternius/head/`. Also from `Hairstyles/Rigged to Head Bone/glTF (Godot -Unreal)/`: `Hair_Beard.gltf`, `Hair_Beard.bin`.
+- The head file asks for two texture names that the zip spells differently. Make copies: `T_Eye_Normal.png` as `T_Eye_Normal_png.png`, and `T_Hair_1_Normal.png` as `T_Hair_1_Normal_png.png`, in the same `head/` folder.
+- From the animation zip, `Unreal-Godot/UAL1_Standard.glb` (the one **without** `_RM`) into `public/cinematic/animations/`.
+
+Each zip contains a `License.txt` that says CC0 1.0. Keep them with your project records. Credit "Quaternius" is optional.
 
 ## 2. Ground texture and HDRI (Poly Haven, CC0)
 
@@ -47,8 +64,11 @@ From the folder that contains `public/`:
 node check-assets.mjs
 ```
 
-It lists each file as `OK` or `MISSING`, and compares the Poly Haven files with their recorded MD5 checksums.
+It lists each file as `OK` or `MISSING` and compares every file with its recorded checksum. The checksums were taken from the files used for the review renders; a different version of a pack may show a difference without being damaged.
 
-## Using a different character
+## Notes
 
-The scene needs a skinned character and clips that use the same bone names. Any KayKit `Rig_Medium` character (Knight, Mage, Rogue, Rogue_Hooded, Barbarian) works with the same animation files: change `ASSET_PATHS.character` in `useAsset.ts`. Other rigs need animation files made for that rig. Before using any new asset, verify its licence on the source page and add it to `asset-manifest.json`.
+- Three character textures are 4096x4096. Each render tab decodes its own copy, and the full render used about 10 GB more memory than an idle PC. Running `python downscale-textures.py <copy of public/cinematic/characters> 2048` on a copy cut this to about 6 GB with no visible difference (mean change 1.5 of 255). The checker's checksums only match the original files, so run the checker before downscaling.
+- The Standard base-character kit has only the "Superhero" bodies. We use only its head, so body proportions come from the outfit (Regular) body. The head and the outfit's hands use different "Dark" skin textures; the tones are close but not identical.
+- Hair colour: the kit's hair texture is a grey palette meant to be tinted. `HAIR_TINT` in `CinematicPOC.tsx` makes it brown.
+- To use another outfit or hairstyle from the same packs, change `ASSET_PATHS` in `useAsset.ts`. Check the bone-name match and the licence of anything new, and add it to `asset-manifest.json`.

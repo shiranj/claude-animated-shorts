@@ -4,42 +4,93 @@
   "note": "Binary files are NOT stored in this repository. Download them as described in ASSETS.md and place them under public/cinematic/.",
   "assets": [
     {
-      "id": "kaykit-ranger",
-      "name": "Ranger (KayKit Adventurers 2.0 FREE)",
-      "category": "character",
-      "source": "itch.io",
-      "assetPage": "https://kaylousberg.itch.io/kaykit-adventurers",
-      "downloadUrl": "https://kaylousberg.itch.io/kaykit-adventurers (\"Download Now\", name your own price, file \"Free 2.0\")",
-      "creator": "Kay Lousberg (www.kaylousberg.com)",
+      "creator": "Quaternius",
       "license": "CC0 1.0",
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-      "licenseEvidence": "Itch.io page field \"Asset license: Creative Commons Zero v1.0 Universal\"; License.txt inside the zip: \"free to use in personal, educational and commercial projects\"; credit \"Kay Lousberg, www.kaylousberg.com\" is optional.",
       "attributionRequired": false,
-      "archive": "KayKit_Adventurers_2.0_FREE.zip",
-      "archiveSha256": "abe48f4763fba0896bab486ee9e6d08ca6b5b3884b9601f235c8847ae94dc479",
-      "modifications": ["scaled to a target height at load time", "materials: environment-map intensity adjusted at load time"],
-      "localPath": "public/cinematic/characters/Ranger.glb",
-      "fileInZip": "KayKit_Adventurers_2.0_FREE/Characters/gltf/Ranger.glb",
-      "technical": "GLB, about 485 KB, 8,900 triangles, 1 skin with 23 bones (Rig_Medium), 1 embedded 1024x1024 gradient texture, no animation clips of its own",
-      "redistribution": "CC0 allows it. This repository still does not commit the file; the creator asks users not to resell unmodified copies."
+      "filesHashAlgorithm": "sha256",
+      "source": "quaternius.com (also on itch.io)",
+      "id": "quaternius-male-ranger",
+      "name": "Male Ranger outfit (Modular Character Outfits - Fantasy, Standard)",
+      "category": "character",
+      "assetPage": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "archive": "Modular Character Outfits - Fantasy[Standard].zip",
+      "archiveSha256": "c3468b18871cc8c8f05ab14df7712baf22cb9f389cbd870babf130e595187f70",
+      "licenseEvidence": "License_Standard.txt inside the zip: \"CC0 1.0 Universal (CC0 1.0) Public Domain Dedication\". quaternius.com FAQ: \"All models are under the CC0 License\", attribution not necessary, modification allowed.",
+      "modifications": [
+        "scaled to 1.75 m at load time",
+        "environment-map intensity adjusted at load time"
+      ],
+      "localPath": "public/cinematic/characters/quaternius/",
+      "files": {
+        "Male_Ranger.gltf": "e1033a212332d84d98c19bc4927c621635478d0aa15d13c79da68d3ba9e0196f",
+        "Male_Ranger.bin": "5bbb0d42cb324c6c27ce00417e68a876d92978f07d161f83590f0d7c0570eff6",
+        "T_Ranger_BaseColor.png": "846ef2170b04ee584ad83bb8a1e86dab57a9a43b1193204505912c274d949925",
+        "T_Ranger_Normal.png": "dd64da2af3180f0c8f0b721cfc5f0d2720c351b97da8285c6cf49e7717c84147",
+        "T_Ranger_ORM.png": "aca03d2fba12508ef07d5968ca22267fb207ea26ae898b6b2def8a296bd44f1c",
+        "T_Regular_Male_Dark_BaseColor.png": "b4dcc0f4139aab548d7c070c4655bd2080ef16caeaaabee6c4aeb693c524e802",
+        "T_Regular_Male_Normal.png": "10cd71e2453e577fdd43e912b6016a99baf64964f0593e524bdd304855e15e2a",
+        "T_Regular_Male_Roughness.png": "086c2eb25bddfdb77d8e639ccbffb8df723ef4a1910d8e1b217e852f8668bfe5"
+      },
+      "technical": "glTF + bin, 9 skinned parts, about 27,000 triangles, 65-bone Universal skeleton, three 4096x4096 and three 2048x2048 PBR textures, 1.87 m tall. The outfit contains no face or head."
     },
     {
-      "id": "kaykit-rig-medium-animations",
-      "name": "Rig_Medium animation files (included in the same zip)",
-      "category": "animation",
-      "source": "itch.io",
-      "assetPage": "https://kaylousberg.itch.io/kaykit-adventurers",
-      "creator": "Kay Lousberg (www.kaylousberg.com)",
+      "creator": "Quaternius",
       "license": "CC0 1.0",
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-      "licenseEvidence": "Same zip and License.txt as above.",
       "attributionRequired": false,
-      "archive": "KayKit_Adventurers_2.0_FREE.zip",
-      "archiveSha256": "abe48f4763fba0896bab486ee9e6d08ca6b5b3884b9601f235c8847ae94dc479",
+      "filesHashAlgorithm": "sha256",
+      "source": "quaternius.com (also on itch.io)",
+      "id": "quaternius-base-head",
+      "name": "Head, eyes, eyebrows and beard (Universal Base Characters, Standard)",
+      "category": "character",
+      "assetPage": "https://quaternius.com/packs/universalbasecharacters.html",
+      "archive": "Universal Base Characters[Standard].zip",
+      "archiveSha256": "fdbf1804c90dfc1ea03e992bff7da2dfd1a79318e13270a660180f9308455f40",
+      "licenseEvidence": "License_Standard.txt inside the zip: \"CC0 1.0 Universal (CC0 1.0) Public Domain Dedication\".",
+      "modifications": [
+        "full-body mesh cropped at load time to the head and neck (triangles above y = 1.5 m)",
+        "hair and eyebrow colour tinted brown at load time",
+        "two texture files copied under the names the glTF expects (T_Eye_Normal_png.png, T_Hair_1_Normal_png.png)"
+      ],
+      "localPath": "public/cinematic/characters/quaternius/head/",
+      "files": {
+        "Superhero_Male_FullBody.gltf": "e7fcea214ecf8855afbf910b50de6f9c7d1decfb71ca28bad8a4481452dafeb4",
+        "Superhero_Male_FullBody.bin": "459003f9745853ae562a85506a2b94dd56515c1f37728f9fa3d2ce1a3e4cd92f",
+        "T_Eye_Brown.png": "d08e3356a83211bc6ca21fe3a8e39f4b5c1a3b8f85457fc2c0fb57be09935025",
+        "T_Eye_Normal.png": "9ed61f7726a54fe346a78b9e5a18905d8e2b88f86235d97f53cd207a26f3f8c7",
+        "T_Eye_Normal_png.png": "9ed61f7726a54fe346a78b9e5a18905d8e2b88f86235d97f53cd207a26f3f8c7",
+        "T_Superhero_Male_Dark.png": "df680cbc1967a61e85998bfafb8f7bc0a36dd604bb3266486c4b06b1a184bb45",
+        "T_Superhero_Male_Normal.png": "9b25cf9200216eb754b79cf4c63b5380c419780788322f3c57cdd2b3e02679a6",
+        "T_Superhero_Male_Roughness.png": "c70dabf48574cda55644d556beae1ee7cf1bdcf68a50d259d20f2f2358f27991",
+        "T_Hair_1_BaseColor.png": "bc7aa863bd22ab0a995cd838cceb4d3a5186ee54ee2fb0108fad85d20c057e6e",
+        "T_Hair_1_Normal.png": "57fd0ad8c96a4d01b38769637e066cecaa285b456f6e48ce00863754a457affb",
+        "T_Hair_1_Normal_png.png": "57fd0ad8c96a4d01b38769637e066cecaa285b456f6e48ce00863754a457affb",
+        "Hair_Beard.gltf": "80013b9791ce12c65fbe693cf669b02ef5c38091c653bf13b9415d2d8380e0ce",
+        "Hair_Beard.bin": "bf2f46ef5808665ef31082f787bc68c51ff063e81b76ca1a51ac86a9ae723be7"
+      },
+      "technical": "Same 65-bone skeleton as the outfit; the rest pose matches exactly from pelvis to head (limbs differ by about 2 cm and are not used)."
+    },
+    {
+      "creator": "Quaternius",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attributionRequired": false,
+      "filesHashAlgorithm": "sha256",
+      "source": "quaternius.com (also on itch.io)",
+      "id": "quaternius-ual",
+      "name": "Universal Animation Library (Standard)",
+      "category": "animation",
+      "assetPage": "https://quaternius.com/packs/universalanimationlibrary.html",
+      "archive": "Universal Animation Library[Standard].zip",
+      "archiveSha256": "cc73fc4e495b82958207316596317a3f40b9fa38065bde1027937452da537724",
+      "licenseEvidence": "License.txt inside the zip: \"CC0 1.0 Universal (CC0 1.0) Public Domain Dedication\".",
       "modifications": [],
       "localPath": "public/cinematic/animations/",
-      "filesInZip": ["KayKit_Adventurers_2.0_FREE/Animations/gltf/Rig_Medium/Rig_Medium_General.glb", "KayKit_Adventurers_2.0_FREE/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb"],
-      "technical": "General: 15 clips (Idle_A, Idle_B, Hit, Death, Interact ...). MovementBasic: 11 clips (Walking_A/B/C, Running_A/B, Jump_*). Clips are in place (no root motion); walk cycle Walking_A is 1.067 s."
+      "files": {
+        "UAL1_Standard.glb": "69591853d817488edaa8fd9bf8fc1d821eaeaf789f8627b3cd23b41c4ed67997"
+      },
+      "technical": "43 clips, 65 bones, root motion disabled (the file without _RM). Used: Walk_Loop (1.333 s), Idle_Loop (2.5 s)."
     },
     {
       "id": "polyhaven-forrest-ground-03",
@@ -59,7 +110,9 @@
         "forrest_ground_03_rough_1k.jpg": "99b60c4ba1dc799e8eddf6e2f1460c09"
       },
       "filesHashAlgorithm": "md5",
-      "modifications": ["tiled and tinted at load time"],
+      "modifications": [
+        "tiled and tinted at load time"
+      ],
       "localPath": "public/cinematic/polyhaven/"
     },
     {
@@ -74,9 +127,13 @@
       "licenseUrl": "https://polyhaven.com/license",
       "licenseEvidence": "polyhaven.com/license, as above.",
       "attributionRequired": false,
-      "files": { "spruit_dawn_1k.hdr": "833f35579506bc7b51b8f94a42a5d866" },
+      "files": {
+        "spruit_dawn_1k.hdr": "833f35579506bc7b51b8f94a42a5d866"
+      },
       "filesHashAlgorithm": "md5",
-      "modifications": ["used for image-based lighting only; not shown as the background"],
+      "modifications": [
+        "used for image-based lighting only; not shown as the background"
+      ],
       "localPath": "public/cinematic/polyhaven/spruit_dawn_1k.hdr"
     }
   ]
