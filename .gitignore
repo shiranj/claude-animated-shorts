@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+node_modules/
+out/
+*.mp4
+*.mov
+*.wav
+.tmp-*
+.check-shots.bundle.mjs

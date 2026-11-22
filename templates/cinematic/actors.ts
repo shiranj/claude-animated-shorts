@@ -2,6 +2,7 @@ import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { ActorSpec } from "./story";
 import { makeLantern } from "./Lantern";
 import { makeBackpack } from "./Backpack";
+import { makePocketWatch } from "./PocketWatch";
 import { hangFromBone } from "./props";
 import { makeMouthMorphs, TRAVELLER_FACE, type FaceProfile } from "./animation/mouth";
 import { ASSET_PATHS } from "./useAsset";
@@ -60,3 +61,43 @@ export const companionActor = (script: CharacterScript, id = "companion"): Actor
 });
 
 export type { FaceProfile };
+
+/* ---------- Peasant outfits (second pack of the same family, same skeleton) ---------- */
+export type PeasantOptions = {
+  id: string;
+  script: CharacterScript;
+  gender: "male" | "female";
+  /** Hairstyle part (file name without folder): Hair_SimpleParted, Hair_Long, Hair_Buns, Hair_Buzzed ... */
+  hair: string;
+  hairTint: string;
+  height?: number;
+  /** Glow of a pocket watch held in the right hand, as a function of the frame (0 = plain watch). Leave out for no watch. */
+  watchGlow?: (frame: number) => number;
+  beard?: boolean;
+  blinkSeed?: number;
+  appear?: [number, number];
+};
+
+/** A villager: Male or Female Peasant outfit, Superhero head and eyebrows, a hairstyle and an optional pocket watch. All CC0. */
+export const peasantActor = (o: PeasantOptions): ActorSpec => {
+  const male = o.gender === "male", face = male ? TRAVELLER_FACE : COMPANION_FACE, headFile = male ? "Superhero_Male_FullBody" : "Superhero_Female_FullBody";
+  return {
+    id: o.id,
+    files: { model: `${Q}${male ? "Male" : "Female"}_Peasant.gltf`, head: `${Q}head/${headFile}.gltf`, hair: [`${Q}head/${o.hair}.gltf`, ...(o.beard ? [`${Q}head/Hair_Beard.gltf`] : [])], animations: [...ASSET_PATHS.animations] },
+    height: o.height ?? (male ? 1.75 : 1.68), clips: CLIPS, feet: FEET, script: o.script, face, blinkSeed: o.blinkSeed, appear: o.appear,
+    extras: ({ head, hair }) => {
+      if (!head) return [];
+      const morphs = makeMouthMorphs(face);
+      return [
+        { gltf: head, include: (n) => n === (male ? "SuperHero_Male" : "Superhero_Female"), headOnly: { minY: male ? 1.5 : 1.45, maxAbsX: 0.16 }, morphs },
+        { gltf: head, include: (n) => n === "Eyes", rigidSplit: { bone: "Head" } },
+        { gltf: head, include: (n) => n === "Eyebrows", rigidSplit: { bone: "Head" }, tint: o.hairTint },
+        ...hair.map((g: GLTF) => ({ gltf: g, include: () => true, tint: o.hairTint, morphs })),
+      ];
+    },
+    props: o.watchGlow ? () => {
+      const watch = makePocketWatch(), glow = o.watchGlow!;
+      return { attachments: [{ bone: "hand_r", object: watch.group }], update: (frame) => { watch.setGlow(frame, glow(frame)); hangFromBone(watch.group, frame, 0.8); } };
+    } : undefined,
+  };
+};

@@ -5,6 +5,7 @@ import { ThreeCanvas } from "@remotion/three";
 import type { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { AnimatedCharacter, CharacterPlaceholder, type Attachment, type Extra } from "./AnimatedCharacter";
 import { ENV_INTENSITY, ForestEnvironment, buildForestLayout } from "./ForestEnvironment";
+import { StudioEnvironment, WorkshopEnvironment, type EnvironmentName } from "./environments";
 import { loadGltf, useAsset } from "./useAsset";
 import { CameraRig, ContactShadow, Vignette } from "./SceneKit";
 import { PostFX, type PostSettings } from "./post";
@@ -44,6 +45,8 @@ export type ActorSpec = {
   blinkSeed?: number;
   /** Mesh names to hide (for example the eyes of a full-body model, when the solid eye pieces replace them). */
   hide?: (meshName: string) => boolean;
+  /** Frames in which the actor is drawn (inclusive). Outside them it is hidden: use it for someone who enters from out of sight. Default: always. */
+  appear?: [number, number];
   /** Props held or worn by this actor. `update` runs each frame after the pose is set. */
   props?: () => { attachments: Attachment[]; update: (frame: number, look: Lighting) => void };
 };
@@ -51,6 +54,11 @@ export type ActorSpec = {
 export type StoryConfig = {
   fps: number;
   frames: number;
+  /** Frame size in pixels. Default 1080 x 1920 (9:16). The camera lens is set for this aspect ratio. */
+  width?: number;
+  height?: number;
+  /** Where the story happens. Default "forest". */
+  environment?: EnvironmentName;
   actors: ActorSpec[];
   shots: Shot[];
   lighting: LightingKey[];
@@ -88,7 +96,7 @@ export type Story = {
   smooth: Record<string, { x: Float32Array; z: Float32Array }>;
   camera: CameraState;
   look: Lighting;
-  layout: ReturnType<typeof buildForestLayout>;
+  layout: ReturnType<typeof buildForestLayout> | null;
 };
 
 const ZERO = (n: number, v = 0) => new Float32Array(n + 1).fill(v);
@@ -106,7 +114,7 @@ export const useStory = (cfg: StoryConfig, frame: number): Story => {
   });
   const ready = loaded.every((l) => l.model.status === "ready" && l.anims.status === "ready" && l.head.status !== "loading" && l.hair.status !== "loading");
   const failed = loaded.some((l) => l.model.status === "error" || l.anims.status === "error");
-  const layout = useMemo(() => buildForestLayout(cfg.keepClear ?? (() => false)), [cfg]);
+  const layout = useMemo(() => ((cfg.environment ?? "forest") === "forest" ? buildForestLayout(cfg.keepClear ?? (() => false)) : null), [cfg]);
 
   // Phase 1: motions (need no actor-to-actor targets). Phase 2: full target table, performances, camera.
   const built = useMemo(() => {
@@ -133,7 +141,7 @@ export const useStory = (cfg: StoryConfig, frame: number): Story => {
     return { actors, motions, refs, smooth: makeRefs(motions, targets, cfg.frames).smooth };
   }, [ready, cfg]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const camera = useMemo(() => (built ? evaluateCamera(cfg.shots, frame, built.refs) : FALLBACK_CAMERA), [built, cfg, frame]);
+  const camera = useMemo(() => (built ? evaluateCamera(cfg.shots, frame, built.refs, (cfg.width ?? 1080) / (cfg.height ?? 1920)) : FALLBACK_CAMERA), [built, cfg, frame]);
   const look = useMemo(() => lightingAt(cfg.lighting, frame), [cfg, frame]);
   return { ready, failed, actors: built?.actors ?? [], motions: built?.motions ?? {}, smooth: built?.smooth ?? {}, camera, look, layout };
 };
@@ -143,7 +151,9 @@ const ActorView: React.FC<{ a: ActorRuntime; frame: number; fps: number; frames:
   const i = clamp(Math.round(frame), 0, frames);
   const x = a.motion.x[i], z = a.motion.z[i], yaw = a.motion.yaw[i];
   const weights = useMemo(() => clipWeightsFor(locoAt(a.chain, frame), a.spec.clips), [a, frame]);
+  const shown = !a.spec.appear || (frame >= a.spec.appear[0] && frame <= a.spec.appear[1]);
   useLayoutEffect(() => { a.props?.update(frame, look); }, [a, frame, look]);
+  if (!shown) return null;
   return (
     <>
       <ContactShadow x={x} z={z} />
@@ -163,7 +173,9 @@ const StoryScene: React.FC<{ cfg: StoryConfig; story: Story; frame: number }> = 
     <>
       <CameraRig frame={frame} pose={pose} deps={story.camera} />
       <LightRig look={story.look} subject={subject} shadowSize={cfg.shadowSize} />
-      <ForestEnvironment layout={story.layout} frame={frame} fps={cfg.fps} dawn={story.look.shafts} subjectZ={subject[2]} />
+      {story.layout ? <ForestEnvironment layout={story.layout} frame={frame} fps={cfg.fps} dawn={story.look.shafts} subjectZ={subject[2]} /> : null}
+      {cfg.environment === "workshop" ? <WorkshopEnvironment frame={frame} fps={cfg.fps} look={story.look} /> : null}
+      {cfg.environment === "studio" ? <StudioEnvironment look={story.look} /> : null}
       {story.ready ? <>{World ? <World frame={frame} look={story.look} motions={story.motions} /> : null}{story.actors.map((a) => <ActorView key={a.spec.id} a={a} frame={frame} fps={cfg.fps} frames={cfg.frames} look={story.look} />)}</> : null}
       {story.failed ? <CharacterPlaceholder position={[0, 0, -7]} /> : null}
     </>
@@ -177,7 +189,7 @@ export const StoryCanvas: React.FC<{ cfg: StoryConfig; frame: number }> = ({ cfg
   const fadeOpacity = Math.max(story.camera.fade.opacity, endFade);
   return (
     <AbsoluteFill style={{ backgroundColor: "#22364a" }}>
-      <ThreeCanvas width={1080} height={1920} shadows gl={{ antialias: true, powerPreference: "high-performance", toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.95 }}
+      <ThreeCanvas width={cfg.width ?? 1080} height={cfg.height ?? 1920} shadows gl={{ antialias: true, powerPreference: "high-performance", toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.95 }}
         camera={{ position: [1, 1.2, -1.6], fov: 38, near: 0.1, far: 120 }}>
         <StoryScene cfg={cfg} story={story} frame={frame} />
         {cfg.post ? <PostFX settings={cfg.post} /> : null}

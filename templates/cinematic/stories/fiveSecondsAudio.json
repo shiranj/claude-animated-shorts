@@ -1,0 +1,32 @@
+{
+  "title": "Five Seconds Ahead",
+  "duration": 36,
+  "voice": "Microsoft David Desktop",
+  "note": "Narration lines are PLACEHOLDERS spoken by a free Windows voice. Replace voice/<id>.wav with a real recording of the same line and run story_sound.py again.",
+  "narration": [
+    { "id": "n1", "start": 0.4,  "text": "Tom was a clockmaker, and he was always a minute late." },
+    { "id": "n2", "start": 4.4,  "text": "Then one night, he found a watch that could show five seconds of tomorrow." },
+    { "id": "n3", "start": 10.6, "text": "At first, he used it for small things. A stool in the dark. A cup before it fell." },
+    { "id": "n4", "start": 18.3, "text": "Then it showed him something he could not fix." },
+    { "id": "n5", "start": 21.0, "text": "He saw the clock fall. He still could not catch it." },
+    { "id": "n6", "start": 28.8, "text": "The future was not his to borrow. It was only his to meet." }
+  ],
+  "beds": [
+    { "type": "roomtone", "from": 0, "to": 36, "gain_db": -34 },
+    { "type": "tick", "from": 0, "to": 36, "gain_db": -26, "period": 1.6 },
+    { "type": "drone", "from": 18.0, "to": 29.5, "gain_db": -24 },
+    { "type": "pad", "from": 29.0, "to": 36, "gain_db": -24 }
+  ],
+  "cues": [
+    { "t": 6.8,  "type": "glow", "dur": 3.4, "gain_db": -16, "note": "the watch wakes (frame 205)" },
+    { "t": 7.9,  "type": "chime", "gain_db": -15, "note": "frame 237" },
+    { "t": 8.0,  "type": "sting", "gain_db": -15, "note": "Tom is startled (frame 240)" },
+    { "t": 9.2,  "type": "door", "gain_db": -18, "note": "Mara opens the back door (frame 276)" },
+    { "t": 9.8,  "type": "footsteps", "dur": 3.2, "gain_db": -20, "note": "she walks in (frames 295 to 392)" },
+    { "t": 17.9, "type": "glow", "dur": 2.0, "gain_db": -17, "note": "the watch again (frame 537)" },
+    { "t": 22.0, "type": "rattle", "dur": 1.0, "gain_db": -22, "note": "the clock wobbles (frame 662)" },
+    { "t": 23.0, "type": "whoosh", "gain_db": -19, "note": "it falls (frame 690)" },
+    { "t": 23.63, "type": "crash", "gain_db": -9, "note": "impact (frame 709)" },
+    { "t": 29.0, "type": "chime", "gain_db": -17, "note": "warm return (frame 870)" }
+  ]
+}

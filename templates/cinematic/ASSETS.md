@@ -70,6 +70,10 @@ It lists each file as `OK` or `MISSING` and compares every file with its recorde
 
 From the same two zips (both CC0): from the outfit zip, `Outfits/Female_Ranger.gltf`, `Female_Ranger.bin`, `T_Regular_Female_Dark_BaseColor.png`, `T_Regular_Female_Normal.png`, `T_Regular_Female_Roughness.png` into `public/cinematic/characters/quaternius/`. From the base-characters zip, `Base Characters/Godot - UE/`: `Superhero_Female_FullBody.gltf`, `.bin`, `T_Superhero_Female_Dark_BaseColor.png`, `T_Superhero_Female_Normal.png`, `T_Superhero_Female_Roughness.png`, `T_Hair_2_BaseColor.png`, `T_Hair_2_Normal.png`, and from `Hairstyles/Rigged to Head Bone/glTF (Godot -Unreal)/` `Hair_Buns.gltf`, `Hair_Buns.bin`, all into `public/cinematic/characters/quaternius/head/`. `node check-assets.mjs` lists them as optional.
 
+## Optional: villagers (P4 story `FiveSeconds` and the story templates)
+
+From the same two zips (both CC0). From the outfit zip, `Exports/glTF (Godot-Unreal)/Outfits/`: `Male_Peasant.gltf`, `Male_Peasant.bin`, `Female_Peasant.gltf`, `Female_Peasant.bin`, `T_Peasant_BaseColor.png`, `T_Peasant_Normal.png`, `T_Peasant_ORM.png`, into `public/cinematic/characters/quaternius/`. From the base-characters zip, `Hairstyles/Rigged to Head Bone/glTF (Godot -Unreal)/`: `Hair_SimpleParted.gltf`, `.bin`, `Hair_Long.gltf`, `.bin`, `T_Hair_1_BaseColor.png`, `T_Hair_1_Normal.png`, into `public/cinematic/characters/quaternius/head/`. (`T_Hair_2_*` and the head files come from the second-character step above.) Run `downscale-textures.py` again for 2K. `node check-assets.mjs` lists them as optional.
+
 ## Notes
 
 - **2K textures are the default from P2.** After `check-assets.mjs`, run `python downscale-textures.py <copy of public/cinematic/characters> 2048`. Keep the 4K originals if you want them.

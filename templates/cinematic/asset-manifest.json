@@ -197,6 +197,63 @@
       },
       "optional": true,
       "optionalNote": "Only needed for the second-character test (TwoCharacterTest)."
+    },
+    {
+      "creator": "Quaternius",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attributionRequired": false,
+      "filesHashAlgorithm": "sha256",
+      "source": "quaternius.com (also on itch.io)",
+      "category": "character",
+      "optional": true,
+      "optionalNote": "Only needed for the P4 story FiveSeconds and the villager-based story templates.",
+      "id": "quaternius-peasant-outfits",
+      "name": "Male and Female Peasant outfits (Modular Character Outfits - Fantasy, Standard), P4 villagers",
+      "assetPage": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "archive": "Modular Character Outfits - Fantasy[Standard].zip",
+      "licenseEvidence": "License_Standard.txt inside the zip says: License: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication (same file as for the Ranger outfits). The Male Peasant also uses the T_Regular_Male_* skin textures already listed under the Male Ranger.",
+      "modifications": [
+        "none (used as exported; same 65-bone skeleton as the Rangers)"
+      ],
+      "localPath": "public/cinematic/characters/quaternius/",
+      "files": {
+        "Male_Peasant.gltf": "8f5a6cf6c1cf96e0a0f8e1a861b4245d42b7f88d44e5076da3d48f3fc52f4e76",
+        "Male_Peasant.bin": "e46bde795f7b69b351d322d7a5628e07131cfb48ed0afe366293f1b3f530433c",
+        "Female_Peasant.gltf": "43ba98058b933cae9acbde0f3ef8c3dda4ba9f69f338606f9d87666d9efffb31",
+        "Female_Peasant.bin": "40eccaa2bd545c893142ef7dca0866ea8f20df3a86c67c5615024bc4fe546e83",
+        "T_Peasant_BaseColor.png": "a43635628d95571cd62fd4db0cc3a6ea32778b2bc02f242dda224c89d07f1ade",
+        "T_Peasant_Normal.png": "7598fa7b63e46fd4dac29708bf5a81e05eb9a67280f7b13c61e28a9110eeb679",
+        "T_Peasant_ORM.png": "e1932f5f91104afca89c501416a5fec09069b8552734237fc09045fabc4ca9b4"
+      }
+    },
+    {
+      "creator": "Quaternius",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attributionRequired": false,
+      "filesHashAlgorithm": "sha256",
+      "source": "quaternius.com (also on itch.io)",
+      "category": "character",
+      "optional": true,
+      "optionalNote": "Only needed for the P4 story FiveSeconds and the villager-based story templates.",
+      "id": "quaternius-hair-extra",
+      "name": "Hairstyles Simple Parted and Long (Universal Base Characters, Standard, rigged to head bone), P4 villagers",
+      "assetPage": "https://quaternius.com/packs/universalbasecharacters.html",
+      "archive": "Universal Base Characters[Standard].zip",
+      "licenseEvidence": "License_Standard.txt inside the zip: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication.",
+      "modifications": [
+        "hair colour tinted at load time (the story chooses it)"
+      ],
+      "localPath": "public/cinematic/characters/quaternius/head/",
+      "files": {
+        "Hair_SimpleParted.gltf": "fe0f354d7f95d83d38e15c60794dcc063fa4d60550706f3d7ba51491cdc07c56",
+        "Hair_SimpleParted.bin": "ecd7c81959f3985d6254458a440daaaa18a8bfbb1dbe111c68a04a72374d54db",
+        "Hair_Long.gltf": "27e2c63e8f98c79fb600268ffcc92b36c621b8653b5a7dcbadb08328f3f887a9",
+        "Hair_Long.bin": "268fd531d2c2ac321783d36fcf106d15c5c76e8923eec2c8704d5fe9de953589",
+        "T_Hair_1_BaseColor.png": "bc7aa863bd22ab0a995cd838cceb4d3a5186ee54ee2fb0108fad85d20c057e6e",
+        "T_Hair_1_Normal.png": "57fd0ad8c96a4d01b38769637e066cecaa285b456f6e48ce00863754a457affb"
+      }
     }
   ]
 }
