@@ -64,5 +64,6 @@ export const LIGHTING_KEYS: LightingKey[] = [
 /** What check-shots.mjs needs. */
 export const STORY_DATA = {
   fps: FPS, frames: FRAMES, shots: SHOTS, targets,
+  watch: [{ name: "crystal", frames: [232, 283] }, { name: "crystal", frames: [450, 540] }], // in view while he notices it, and in the final picture. The reaction close-ups cut away from it on purpose.
   actors: [{ id: "traveller", script: TRAVELLER, height: 1.75, clips: { idle: "Idle_Loop", walk: "Walk_Loop", run: "Jog_Fwd_Loop" }, feet: ["foot_l", "foot_r"] as [string, string] }],
 };
