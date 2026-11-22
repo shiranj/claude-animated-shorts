@@ -1,4 +1,8 @@
-# Cinematic starter: animated adult character in a forest trail
+# Cinematic system: starter files, tools and examples (P0 to P4)
+
+> Start with the repository [README](../../README.md), [docs/WORKFLOW.md](../../docs/WORKFLOW.md) and [docs/SETUP_WINDOWS.md](../../docs/SETUP_WINDOWS.md). This file describes the first proof of concept and the file list.
+
+## The first proof of concept: an animated adult character in a forest trail
 
 A 10-second, 1080x1920, 30 fps vertical shot. It proves the cinematic pipeline end to end: a rigged, animated GLB character with adult proportions, a layered environment, motivated lighting, a tracking camera, and a deterministic Remotion render.
 
@@ -17,6 +21,7 @@ The scene is only an **example**. The reusable parts are `AnimatedCharacter.tsx`
 | `animation/`, `AnimationDemo.tsx`, `demoScript.ts`, `props.ts`, `SceneKit.tsx` | **P2.** Typed story script, pose layers (look-at, hands, arms, face), the 14 s demo. See [ANIMATION.md](ANIMATION.md). |
 | `camera/`, `lighting.tsx`, `story.tsx`, `actors.ts`, `StoryDemo.tsx`, `storyDemoData.ts`, `TwoCharacterTest.tsx`, `post.tsx` | **P3.** Camera shots and presets, lighting presets, the story runtime, the 18 s demo, a two-character test, optional post-processing. See [CINEMATIC.md](CINEMATIC.md). |
 | `check-gpu.mjs`, `render-measured.mjs`, `check-shots.mjs`, `qa-video.py` | **P3.** GPU check, measured render, composition check, video QA. |
+| `environments.tsx`, `PocketWatch.ts`, `stories/`, `story-templates/`, `produce.mjs`, `check-determinism.mjs` | **P4.** Workshop and studio places, a pocket watch, the 36 s story `FiveSeconds`, six story templates (see [story-templates/README.md](story-templates/README.md)), the `produce.mjs` entry point, a repeat-render pixel check. Setup: [../../docs/SETUP_WINDOWS.md](../../docs/SETUP_WINDOWS.md). Steps: [../../docs/WORKFLOW.md](../../docs/WORKFLOW.md). |
 | `ASSETS.md` | **Read first.** Where to get the free assets and where to put them. |
 | `asset-manifest.json`, `ASSET_CREDITS.md` | Source, creator, licence and checksum of every external asset. |
 | `check-assets.mjs` | Tells you which asset files are missing or damaged. |

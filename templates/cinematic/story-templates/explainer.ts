@@ -16,20 +16,20 @@ export const explainer = (opts: Partial<Options> = {}): StorySpec => {
       { type: "look", from: at(0.9), to: F, at: { target: "lens" } },
     ],
   };
-  const wide = presets.establishingWide("scene", { fit: 4.6, elevation: 4, height: 0.8, screen: { x: 0, y: -0.04 } });
+  const wide = presets.establishingWide("scene", { fit: 5.4, elevation: 4, height: 0.8, screen: { x: 0, y: -0.04 } });
   const obj = presets.closeUp("object", { fit: 1.1, azimuth: 20, elevation: 4, relative: false, height: 0, screen: { x: 0, y: 0 } });
   const med = presets.medium("presenter", { follow: "live", fit: 1.9, azimuth: -14 });
   return {
     id: "T-Explainer", title: "Concept explainer", genre: "Product / concept explainer", ...O, frames: F, environment: "studio",
-    cast: [{ id: "presenter", look: { kit: "peasant", gender: "female", hair: "Hair_Long", hairTint: "#2c1b12" }, script: presenter }],
+    cast: [{ id: "presenter", look: { kit: "peasant", gender: "female", hair: "Hair_Long", hairTint: "#2c1b12" }, script: presenter, visible: [[0, at(0.15) - 1], [at(0.38), at(0.6) - 1], [at(0.85), F]] }],
     props: [{ kind: "crystal", at: [0.9, 1.15, -2.0] }],
     points: { lens: [0, 1.6, 8], object: [0.9, 1.15, -2.0], scene: [0, 0, -2.2] },
     shots: [
-      shot("intro", 0, at(0.15), wide, { end: pushIn(wide, 0.1) }),
+      shot("intro", 0, at(0.15), wide, { end: pushIn(wide, 0.05) }),
       shot("the-thing", at(0.15), at(0.38), obj, { end: orbit(pushIn(obj, 0.15), 40), transition: { type: "cut" } }),
       shot("why-it-matters", at(0.38), at(0.6), med, { end: pushIn(med, 0.06), transition: { type: "cut" } }),
       shot("the-detail", at(0.6), at(0.85), obj, { end: orbit(pushIn(obj, 0.25), -50), transition: { type: "cut" } }),
-      shot("call-to-action", at(0.85), F, wide, { end: pullBack(wide, 0.1), transition: { type: "blend", frames: S(1) } }),
+      shot("call-to-action", at(0.85), F, wide, { end: pullBack(wide, 0.1), transition: { type: "cut" } }),
     ],
     lighting: [{ frame: 0, preset: "daylight" }, { frame: at(0.15), preset: "magical", blend: S(1.5) }, { frame: at(0.85), preset: "daylight", blend: S(2) }],
     endFade: S(1),

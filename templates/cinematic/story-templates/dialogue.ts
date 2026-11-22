@@ -13,7 +13,7 @@ export const DEFAULT_LINES: Line[] = [
   { who: "cy", text: "Fine. Hold the lantern.", seconds: 2.6 },
 ];
 
-const POS = { ana: { x: -1.1, z: -2.0 }, ben: { x: 0.0, z: -2.6 }, cy: { x: 1.1, z: -2.0 } } as const;
+const POS = { ana: { x: -0.9, z: -2.0 }, ben: { x: 0.0, z: -2.6 }, cy: { x: 0.9, z: -2.0 } } as const;
 
 /** Multi-character dialogue: three people in a studio. The script of each person is made from the list of lines: the speaker talks (a nod of emotion, a gesture),
  *  the others look at the speaker. The camera cuts to the speaker on every line (medium shot), after an opening wide. Change `lines` to change the scene. */
@@ -33,14 +33,14 @@ export const dialogue = (opts: Partial<Options> & { lines?: Line[] } = {}): Stor
       } else scripts[id].push({ type: "look", from: S(a - 0.2), to: S(b + 0.2), at: { target: `${l.who}.head` } });
     }
   });
-  const cast = ids.map((id) => ({ id, look: id === "ana" ? { kit: "peasant" as const, gender: "female" as const, hair: "Hair_Long", hairTint: "#2c1b12" } : id === "ben" ? { kit: "peasant" as const, gender: "male" as const, hair: "Hair_SimpleParted", hairTint: "#4a3322" } : { kit: "companion" as const }, script: { start: { ...POS[id], yaw: 0 }, actions: scripts[id] } as CharacterScript }));
-  const wide = presets.establishingWide([0, 0, -2.2], { fit: 5.0, elevation: 3, height: 1.0, screen: { x: 0, y: -0.04 } });
+  const wide = presets.establishingWide([0, 0, -2.2], { fit: 5.8, elevation: 3, height: 1.0, screen: { x: 0, y: -0.04 } });
   const shots: Shot[] = [shot("establishing", 0, S(1.5), wide, { end: pushIn(wide, 0.08) })];
   lines.forEach((l, i) => {
     const from = S(i === 0 ? 1.5 : times[i][0] - gap / 2), to = i === lines.length - 1 ? F : S(times[i + 1][0] - gap / 2);
     const m = presets.medium(l.who, { follow: "live", fit: 1.9, azimuth: l.who === "ana" ? 14 : l.who === "cy" ? -14 : 0, screen: { x: 0.04, y: 0.03 } });
     shots.push(shot(`line-${i + 1}-${l.who}`, from, to, m, { end: pushIn(m, 0.05), transition: { type: "cut" } }));
   });
+  const cast = ids.map((id) => ({ id, look: id === "ana" ? { kit: "peasant" as const, gender: "female" as const, hair: "Hair_Long", hairTint: "#2c1b12" } : id === "ben" ? { kit: "peasant" as const, gender: "male" as const, hair: "Hair_SimpleParted", hairTint: "#4a3322" } : { kit: "companion" as const }, script: { start: { ...POS[id], yaw: 0 }, actions: scripts[id] } as CharacterScript, visible: shots.filter((sh) => sh.name === "establishing" || sh.name?.endsWith(`-${id}`)).map((sh) => [sh.from, sh.to - 1] as [number, number]) }));
   return {
     id: "T-Dialogue", title: "Multi-character dialogue", genre: "Dialogue / funny / drama", ...O, frames: F, environment: "studio",
     cast, points: { centre: [0, 1.0, -2.2] }, shots, endFade: S(1),

@@ -24,8 +24,8 @@ export const suspense = (opts: Partial<Options> = {}): StorySpec => {
   return {
     id: "T-Suspense", title: "Suspense / mystery", genre: "Mystery and suspense", ...O, frames: F, environment: "workshop",
     cast: [
-      { id: "hero", look: { kit: "peasant", gender: "male", hair: "Hair_SimpleParted", hairTint: "#4a3322" }, script: hero },
-      { id: "stranger", look: { kit: "peasant", gender: "female", hair: "Hair_Long", hairTint: "#2c1b12" }, script: stranger, appear: [at(0.58), F], visible: [[at(0.64), at(0.8)]] },
+      { id: "hero", look: { kit: "peasant", gender: "male", hair: "Hair_SimpleParted", hairTint: "#4a3322" }, script: hero, visible: [[0, at(0.64) - 1], [at(0.8), F]] },
+      { id: "stranger", look: { kit: "peasant", gender: "female", hair: "Hair_Long", hairTint: "#2c1b12" }, script: stranger, appear: [at(0.58), F], visible: [[at(0.64), at(0.8) - 1]] },
     ],
     points: { desk: [1.0, 0.95, -1.9], door: [2.3, 1.4, -3.6] },
     shots: [

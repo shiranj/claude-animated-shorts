@@ -1,34 +1,53 @@
 # Claude Animated Shorts
 
-The free Claude skill from the video **"How to Make Viral Animated Shorts Using Claude (Full Workflow)"**.
+A Claude Code skill that makes **cinematic stylized-3D vertical Shorts** (1080 x 1920, 30 fps) on your own Windows PC with Remotion and Three.js. You give a story or a topic. Claude plans the shots, cuts the cast, acts, lights and films it, adds sound, renders on your NVIDIA card, checks the video, and hands you the MP4.
 
-It creates vertical animated Shorts with a cinematic stylized-3D art direction: expressive characters, rich layered environments, motivated lighting, deliberate camera work, narration-synchronised animation and original sound. Everything is rendered with Three.js inside Remotion on your own PC. The original flat-character / painted-toon bridge look remains available as a legacy style.
+Everything is free: CC0 characters, shapes and textures made in code, a numpy sound tool, and a free Windows voice for placeholder narration. No paid service is needed.
 
-Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broughton bridge.
+## What you get
 
-## What's inside
+- Story templates for six kinds of Short: informative, historical, suspense, emotional, dialogue, concept explainer.
+- A camera system (presets, moves, cuts, blends, fades), six lighting looks, three places (forest, workshop, studio), props, acting (walk, look, emotions, gestures, hands) that are all plain data.
+- Automatic checks: composition before rendering, GPU, assets and licences, video QA with phone-size sheets, render time and memory.
+- One entry point: `node produce.mjs`.
+
+Worked example: **Five Seconds Ahead** (36 s, two characters, workshop, four lighting looks, a pocket watch and a falling clock). Its story is a data file in `templates/cinematic/stories/`.
+
+## Start here
+
+| Read | For |
+|---|---|
+| [docs/SETUP_WINDOWS.md](docs/SETUP_WINDOWS.md) | Install, assets, 2K textures, GPU check, first render, problems |
+| [docs/WORKFLOW.md](docs/WORKFLOW.md) | The 12 steps from idea to final video, with commands |
+| [SKILL.md](SKILL.md) | The instructions Claude follows |
+| [templates/cinematic/story-templates/README.md](templates/cinematic/story-templates/README.md) | The six templates and the kit |
+| [templates/cinematic/CINEMATIC.md](templates/cinematic/CINEMATIC.md) | Camera, lighting, safe rendering, QA |
+| [templates/cinematic/DETERMINISM.md](templates/cinematic/DETERMINISM.md) | What is and is not repeatable |
+| [docs/P4_AUDIT.md](docs/P4_AUDIT.md) | Architecture and technical debt report |
+
+## Install the skill
+
+1. Put this folder at `%USERPROFILE%\.claude\skills\cartoon-3d-short\` (clone it there, or unzip).
+2. Follow `docs/SETUP_WINDOWS.md` once to make a project folder (`npm install`) and download the assets.
+3. In Claude Code say: *"Use the cinematic animated short skill and make a 35 second short about ..."*
+
+## What is in this repository
+
 | Path | What it is |
 |---|---|
-| `SKILL.md` | The skill: the full pipeline, every rule, every fix, and the final look values |
-| `templates/bridge/` | The full source of the bridge short: world, characters, ink, lens blur, grade, story/camera |
-| `templates/audio/` | The synthesized sound: SFX, march music, the mix with ducking and loudness |
-| `templates/scripts/` | Stills, side-by-side sheets, shot merge and frame-by-frame QA helpers |
-| `references/CINEMATIC_STYLE_BIBLE.md` | Default cinematic visual direction for new projects |
-| `references/FREE_ASSET_POLICY.md` | Free asset sources, licence checks and asset provenance rules |
-| `docs/CINEMATIC_PIPELINE.md` | Cinematic production architecture and phased implementation |
-| `references/STYLE_BIBLE.md` | Original bridge-style research, retained for legacy projects |
-| `references/reports/` | Seven measured reports: motion, depth, textures, characters, lighting, outlines, grade |
+| `SKILL.md` | The skill |
+| `docs/` | Setup, workflow, audit, and the review images of each phase (`p0` to `p3`, `p4`) |
+| `templates/cinematic/` | The system: animation, camera, lighting, story runtime, environments, tools, templates, stories |
+| `templates/audio/` | `story_sound.py` (sound design and mix), `narration_sapi.ps1`, and the older bridge sound files |
+| `templates/bridge/`, `templates/scripts/` | The legacy flat-character bridge style and its helpers |
+| `references/` | Style bible, free-asset policy, written research reports, legacy bridge notes |
 
-## Install
-1. Copy this folder to `~/.claude/skills/cartoon-3d-short/` (clone it there, or download the ZIP).
-2. You need [Remotion](https://www.remotion.dev/) with `@remotion/three`, plus Node, Python 3 and ffmpeg.
-3. In Claude Code, say: *"Use the cinematic animated short skill and make a short about …"*. The default style is cinematic stylized 3D. Ask explicitly for the original bridge style when you want the legacy flat-character look.
+Not in this repository, on purpose: character and texture files (about 400 MB; download steps and checksums are in `templates/cinematic/ASSETS.md`), rendered videos, `node_modules`, and any third-party video frames.
 
-Claude then follows `SKILL.md`: topic and facts, then script, then voice, then the shot plan in `story.ts`, then stills, then renders. Agents check your frames against the reports and the frames, and you get the final 2K render and sound mix.
+## Licences
 
-## Notes
-- Set `REMOTION_TMP` to a folder on a big drive. Every Remotion bundle copies `public/` (~1.3 GB) into the temp folder.
-- Story, characters and voice should always be your own. Use the references for the look, not the content.
+Code and documents: MIT (`LICENSE`). Assets: see `templates/cinematic/ASSET_CREDITS.md` and `asset-manifest.json`. Every external file is CC0 (Quaternius characters, Poly Haven ground and sky) with its creator, source, licence text location and checksum recorded. Everything else is generated in code.
 
-## License
-The code and docs are MIT (see `LICENSE`). No third-party video frames are included.
+## Limits (honest list)
+
+No real dissolve between shots and no depth of field. Characters share one skeleton family. Pixels can differ by a tiny amount between two renders of the same frame (GPU), so files are not byte-identical. Hands and props clipping through bodies are not detected automatically. Tested on one PC (Windows 11, RTX 5060 Ti, 32 GB). The placeholder narration is robotic by design: record your own voice for the real video.

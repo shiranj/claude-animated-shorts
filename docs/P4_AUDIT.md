@@ -61,3 +61,22 @@ Checked every file in `templates/cinematic` for imports.
 
 Pinned set (unchanged in P4): Remotion 4.0.250, three 0.160.1, @react-three/fiber 8.15.19, postprocessing 6.34.3, React 18.3.1, TypeScript 5.5.4. No new package is needed for P4. Python tools use numpy, Pillow and ffmpeg, which were already needed. The sound tool will use numpy only (and scipy if it is present).
 
+
+## 7. Status at the end of P4
+
+| # | Finding | Result |
+|---|---|---|
+| 1 | Third-party reference frames | **Removed** from the working tree (`references/frames`, `references/sheets`). They are still in the Git history of earlier commits (nothing was pushed). Rewriting history needs your approval. |
+| 2, 3 | Hardcoded bridge paths | **Fixed**: `--root` / `BRIDGE_ROOT`, `CHROME_PATH`, `BRIDGE_COMP`. Tested with a fake project folder and a wrong folder. The bridge template itself was not touched. The scripts were not run against a real bridge project. |
+| 4 | `.gitattributes` | **Added and tested**: no CRLF warnings for tracked file types; warnings remain only for files written by Windows tools (Python text mode) and disappear on the next normalisation. |
+| 5 | Unused dependency | **Removed** from the harness `package.json`. Clean install tested: 226 packages, type-check passes. |
+| 6 | Forest hard-wired | **Fixed**: `environment`, `width`, `height`, `appear`. The forest is still the default; the old demos render the same. |
+| 7 | No single path | **Done**: `produce.mjs`, `docs/WORKFLOW.md`, `docs/SETUP_WINDOWS.md`, new `SKILL.md`. |
+| 8 | Docs disagree | **Fixed**: `SKILL.md` and `README.md` rewritten; bridge details moved unchanged to `references/LEGACY_BRIDGE.md`; the P0 pipeline note marked as historical. |
+| 9 | Two QA tools | Kept. `produce.mjs qa` and `check` are the documented order. |
+| 10 | No generic sound | **Added** `templates/audio/story_sound.py` (numpy only) and `narration_sapi.ps1`. |
+| 11 | Pixel noise | **Investigated**: see `templates/cinematic/DETERMINISM.md`. Cause is rare GPU noise, amplified by the H.264 encoder. Not fully traced inside the driver. |
+| 12 | Claw hand | **Fixed**: per-joint finger shape, new poses, `hand` script action. Checked on a render of the same frame. |
+| 13 | QA gaps | **Added**: watched props, camera speed limit (failure), face size, subject low or far to the side (warnings), multi-range `visible`, aspect ratio. The checker found real problems in the new story and in all six templates while they were written. |
+
+Not done and not planned in P4: real dissolve, depth of field, hardware encoding, history rewrite, other skeletons, automatic clipping detection.

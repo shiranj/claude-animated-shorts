@@ -1,0 +1,80 @@
+{
+ "perShot": {
+  "establishing": {
+   "frames": 105,
+   "minHeadMargin": 0.6171907800003754,
+   "maxHeadPx": 144.2561712563438,
+   "minHeadPx": 119.26563508111133
+  },
+  "tom-medium": {
+   "frames": 100,
+   "minHeadMargin": 0.11067643067365351,
+   "maxHeadPx": 372.48154550508985,
+   "minHeadPx": 144.2883880714073
+  },
+  "watch-glow": {
+   "frames": 57,
+   "minHeadMargin": 9,
+   "maxHeadPx": 0,
+   "minHeadPx": 1000000000
+  },
+  "tom-wonder": {
+   "frames": 60,
+   "minHeadMargin": 0.16001765124151213,
+   "maxHeadPx": 811.3300088992071,
+   "minHeadPx": 763.6596328622886
+  },
+  "mara-enters": {
+   "frames": 98,
+   "minHeadMargin": 0.3910975415664072,
+   "maxHeadPx": 211.00550571908613,
+   "minHeadPx": 187.7627428136019
+  },
+  "two-shot": {
+   "frames": 110,
+   "minHeadMargin": 0.19829943897696045,
+   "maxHeadPx": 163.4213443712097,
+   "minHeadPx": 132.75681888498957
+  },
+  "tom-checks": {
+   "frames": 70,
+   "minHeadMargin": 0.07743279063085895,
+   "maxHeadPx": 388.8517819359678,
+   "minHeadPx": 357.4250164897219
+  },
+  "tom-fear": {
+   "frames": 68,
+   "minHeadMargin": 0.4988172013104772,
+   "maxHeadPx": 580.9087281827781,
+   "minHeadPx": 534.5732476033816
+  },
+  "shelf-wide": {
+   "frames": 16,
+   "minHeadMargin": 0.05515317945547926,
+   "maxHeadPx": 112.09527026167255,
+   "minHeadPx": 99.90667472701955
+  },
+  "clock-falls": {
+   "frames": 86,
+   "minHeadMargin": 9,
+   "maxHeadPx": 0,
+   "minHeadPx": 1000000000
+  },
+  "aftermath": {
+   "frames": 110,
+   "minHeadMargin": 0.2628959200166495,
+   "maxHeadPx": 174.6373969341502,
+   "minHeadPx": 138.63318063163072
+  },
+  "final": {
+   "frames": 201,
+   "minHeadMargin": 0.26287799879890716,
+   "maxHeadPx": 174.64263991157034,
+   "minHeadPx": 101.60740578076431
+  }
+ },
+ "issues": [],
+ "warnings": [],
+ "maxCameraStepPerFrame": 0.15490749274571744,
+ "maxCameraStepFrame": 124
+}

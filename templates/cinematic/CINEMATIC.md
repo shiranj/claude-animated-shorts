@@ -59,3 +59,13 @@ It checks: the file exists and decodes; resolution, frame rate, frame count, cod
 ## 6. Two characters
 
 `actors.ts` has `travellerActor` and `companionActor` (Quaternius Female Ranger outfit + Superhero Female head + Buns hair, all CC0). Each actor carries its own face landmarks (`FaceProfile`), hair tint, props and blink seed; the animation code is the same. To add a character: measure its face landmarks (see ANIMATION.md), write an `ActorSpec`, and give it an `id`. `TwoCharacterTest` is a 6 s proof (walk in, look, startle, wave).
+
+## 7. Added in P4
+
+- **Places:** `StoryConfig.environment` is `"forest"` (default), `"workshop"` or `"studio"` (`environments.tsx`, all made in code). `width` and `height` set the frame size and the lens aspect, so a 16:9 story works the same way (the composition check uses them too).
+- **Actors that enter:** `ActorSpec.appear: [from, to]` draws an actor only in those frames, so someone can come in through a door without standing in it before.
+- **Hands:** finger poses are per joint (no claw), with `relaxed`, `cupped`, `flat`, `open`, `fist`, `point`, `grip`. The script action `{ type: "hand", hand, pose }` sets a pose by name or by single fingers.
+- **Composition check (`check-shots.mjs`)** now also reports: watched props (`watch: [{ name, frames }]` in the story data) that leave the safe area, camera speed above a limit (6 m/s by default, `maxCameraSpeed`), a face that may be too small on a phone, a subject low in a tight shot or far to the side (warnings). An actor's `visible` can be a list of ranges: close-ups of someone else leave an actor out on purpose. `SHOT_POSITIONS=1` prints where the actors stand every 60 frames.
+- **Repeatability:** see [DETERMINISM.md](DETERMINISM.md).
+- **Entry point:** `node produce.mjs` (doctor, check, stills, render, audio, mux, qa, spec). `produce.mjs mux` normalises the sound to about -16 LUFS.
+- **Templates:** [story-templates/README.md](story-templates/README.md).

@@ -6,7 +6,7 @@
 //   node produce.mjs stills <entry> <Comp> <frames> [scale]  review stills, for example: stills index.ts FiveSeconds 40,150,300 0.5
 //   node produce.mjs render <entry> <Comp> <out.mp4> [...]   measured render on the discrete GPU (extra flags go to render-measured.mjs)
 //   node produce.mjs audio <audio.json> <outdir>             placeholder narration (Windows voice) + sound design -> <outdir>/mix.wav
-//   node produce.mjs mux <video.mp4> <mix.wav> <out.mp4>     put the sound under the picture
+//   node produce.mjs mux <video.mp4> <mix.wav> <out.mp4>     put the sound under the picture (normalised to about -16 LUFS)
 //   node produce.mjs qa <video.mp4> <outdir> [qa-video flags] automatic video QA, contact sheet, phone-size sheets
 //   node produce.mjs spec <NAME> [seconds]                   print the audio.json of a template (to edit and use with `audio`)
 //
@@ -59,11 +59,11 @@ switch (cmd) {
     else console.log("No Windows voice here: put your own <id>.wav files in " + voice + " (see narration ids in the JSON).");
     process.exit(run(process.platform === "win32" ? "python" : "python3", ["-I", path.join(here, "..", "audio", "story_sound.py"), args[0], path.join(args[1], "mix.wav"), "--voice-dir", voice]));
   }
-  case "mux": need(3, "mux <video.mp4> <mix.wav> <out.mp4>"); process.exit(run("ffmpeg", ["-y", "-v", "error", "-i", args[0], "-i", args[1], "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", args[2]]));
+  case "mux": need(3, "mux <video.mp4> <mix.wav> <out.mp4>"); process.exit(run("ffmpeg", ["-y", "-v", "error", "-i", args[0], "-i", args[1], "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "48000", "-c:a", "aac", "-b:a", "192k", "-shortest", args[2]]));  // loudnorm: about -16 LUFS, the usual level for Shorts
   case "qa": need(2, "qa <video.mp4> <outdir> [--frames N --cuts a,b --fades a,b --shot-check file --render-report file]"); process.exit(py("qa-video.py", args));
   case "spec": {
     need(1, "spec <NAME> [seconds]");
-    const require = createRequire(import.meta.url), esbuild = require("esbuild"), out = path.join(os.tmpdir(), `spec-${process.pid}.mjs`);
+    const require = createRequire(import.meta.url), esbuild = require("esbuild"), out = path.join(here, `.tmp-spec-${process.pid}.mjs`);  // next to produce.mjs so that `three` can be found
     esbuild.buildSync({ entryPoints: [path.join(here, "story-templates", "index.ts")], bundle: true, platform: "node", format: "esm", external: ["three", "three/*"], outfile: out, logLevel: "error" });
     const { TEMPLATES } = await import("file://" + out.replace(/\\/g, "/")); fs.rmSync(out, { force: true });
     if (!TEMPLATES[args[0]]) { console.error("Unknown template. Choose: " + Object.keys(TEMPLATES).join(", ")); process.exit(1); }

@@ -1,3 +1,5 @@
+> **Status (P4):** this is the original P0 plan. The working pipeline is now in [WORKFLOW.md](WORKFLOW.md) and the skill in [../SKILL.md](../SKILL.md). Kept for history.
+
 # Cinematic Shorts Production Architecture
 
 ## Goal

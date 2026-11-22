@@ -26,7 +26,7 @@ export const historical = (opts: Partial<Options> = {}): StorySpec => {
       shot("place-and-year", 0, at(0.25), wide, { end: pushIn(wide, 0.3), motion: "late" }),
       shot("the-journey", at(0.25), at(0.55), track, { transition: { type: "blend", frames: S(1.8) } }),
       shot("the-moment", at(0.55), at(0.8), cu, { end: pushIn(cu, 0.06), transition: { type: "cut" } }),
-      shot("what-remains", at(0.8), F, fin, { end: orbit(pullBack(fin, 0.2), -10), transition: { type: "blend", frames: S(1.2) } }),
+      shot("what-remains", at(0.8), F, fin, { end: orbit(pullBack(fin, 0.2), -10), transition: { type: "fade", frames: S(0.8) } }),
     ],
     lighting: [{ frame: 0, preset: "sunset" }, { frame: at(0.6), preset: "night", blend: S(5) }],
     endFade: S(1.2),

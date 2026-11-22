@@ -26,7 +26,7 @@ export const informative = (opts: Partial<Options> = {}): StorySpec => {
       shot("point-1", at(0.12), at(0.4), med, { end: pushIn(med, 0.06), transition: { type: "cut" } }),
       shot("emphasis", at(0.4), at(0.55), cu, { end: pushIn(cu, 0.05), transition: { type: "cut" } }),
       shot("point-2", at(0.55), at(0.8), med, { transition: { type: "cut" } }),
-      shot("wrap-up", at(0.8), F, wide, { end: pullBack(wide, 0.1), transition: { type: "blend", frames: S(1) } }),
+      shot("wrap-up", at(0.8), F, wide, { end: pullBack(wide, 0.1), transition: { type: "cut" } }),
     ],
     lighting: [{ frame: 0, preset: "daylight" }],
     endFade: S(1),

@@ -50,7 +50,7 @@ export const TOM: CharacterScript = {
   actions: [
     { type: "hand", hand: "right", pose: { thumb: 0.65, index: 0.7, middle: 0.5, ring: 0.5, pinky: 0.5 }, from: 0, to: FRAMES, blend: 8 }, // pinches the watch chain
     { type: "look", from: 0, to: 112, at: { target: "counterTop" } },                // working at the counter
-    { type: "reach", from: 96, to: 322, hand: "right", at: "watchUp" },              // lifts the watch to look at it and keeps it up while it glows
+    { type: "reach", from: 96, to: 350, hand: "right", at: "watchUp" },              // lifts the watch to look at it and keeps it up while it glows; the arm comes down after the cut to Mara (frame 322)
     { type: "look", from: 108, to: 330, at: { target: "watchUp" } },
     { type: "startle", from: 240, to: 296, strength: 0.7, emotion: "surprise" },    // the watch shows tomorrow
     { type: "emotion", emotion: "happy", from: 296, to: 540, intensity: 0.85 },
