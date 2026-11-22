@@ -58,7 +58,7 @@ Proven example: **The Bridge That Fell for a Song**. It is an original 67 s shor
 - Script, voice and sound: `~/bridge-short/`.
 - Style research: `references/`.
 
-The style reference is a channel studied privately (`references/`: STYLE_BIBLE.md, reports/*.md, frames/).
+The style reference is a channel studied privately (`references/`: STYLE_BIBLE.md and reports/*.md; the original reference frames were removed from the repository in P4).
 - Those videos are private study material. Never upload, publish or send them.
 - Never copy their scripts, characters or shots. Story, characters and voice are always OUR OWN.
 - Never say the channel's name in a voice-over or description.

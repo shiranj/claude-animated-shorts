@@ -1,9 +1,19 @@
 # Merge the four look sandboxes back into the main bridge folder, by owned files.
 # Backs up main first (backup/bridge_<time>/), copies each sandbox's owned files, reports which owned files are
 # missing or unchanged. Usage: python scripts/bridge_merge.py [cam,world,char,post]
+# The Remotion project folder is the current folder, or the BRIDGE_ROOT environment variable, or --root <folder>.
 import os, shutil, sys, time, filecmp
 
-ROOT = os.path.expanduser("your Remotion project")
+args = sys.argv[1:]
+if "--root" in args:
+    i = args.index("--root")
+    root_arg = args[i + 1]
+    del args[i:i + 2]
+else:
+    root_arg = None
+ROOT = os.path.abspath(root_arg or os.environ.get("BRIDGE_ROOT") or os.getcwd())
+if not os.path.isdir(os.path.join(ROOT, "src/videos/bridge")):
+    sys.exit("Not a Remotion project with src/videos/bridge: " + ROOT + chr(10) + "Run from the project folder, set BRIDGE_ROOT, or pass --root <folder>.")
 MAIN = os.path.join(ROOT, "src/videos/bridge")
 OWN = {  # round 2 ownership (round 1: world also owned paint/build, post owned grade)
     "cam": ["story.ts"],
@@ -12,7 +22,7 @@ OWN = {  # round 2 ownership (round 1: world also owned paint/build, post owned 
     "char": ["toon.ts", "cast.ts", "cardshade.ts"],
     "post": ["ink.ts", "Bridge.tsx", "lensblur.ts"],
 }
-which = sys.argv[1].split(",") if len(sys.argv) > 1 else list(OWN)
+which = args[0].split(",") if args else list(OWN)
 bak = os.path.join(ROOT, "backup", time.strftime("bridge_%Y%m%d_%H%M%S"))
 shutil.copytree(MAIN, bak)
 print("backup ->", bak)

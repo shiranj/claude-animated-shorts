@@ -1,0 +1,28 @@
+# Keep line endings stable across Windows, macOS and Linux.
+# Text files are stored with LF in Git. On Windows they may be checked out with CRLF.
+* text=auto
+
+# Always LF (scripts that run in Git Bash or Linux must not get CRLF).
+*.sh text eol=lf
+*.mjs text eol=lf
+*.py text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Binary files: never touch.
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.mp4 binary
+*.wav binary
+*.glb binary
+*.gltf text eol=lf
+*.bin binary
+*.hdr binary
+*.zip binary
+
+.gitattributes text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf

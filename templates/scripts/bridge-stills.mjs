@@ -1,5 +1,6 @@
 // usage: node scripts/bridge-stills.mjs <outPrefix> <frame,frame,...> [scale]  (bundles once, GPU via ANGLE, jpeg)
 // BRIDGE_ENTRY=src/sandboxes/<name>/index.tsx renders a sandbox copy instead of the main project entry.
+// BRIDGE_COMP=<id> picks another composition (default BridgeShort). CHROME_PATH=<chrome.exe> picks the browser.
 import fs from "node:fs";
 // each bundle copies public/ (~1.3 GB) into the temp dir; C: is full, so keep bundles on D:
 // Remotion bundles fill the temp folder (~1.3 GB each): set REMOTION_TMP to a folder on a big drive
@@ -8,10 +9,11 @@ import { bundle } from "@remotion/bundler";
 import { renderStill, selectComposition } from "@remotion/renderer";
 import path from "node:path";
 const [prefix, frames, scale = "0.5"] = process.argv.slice(2);
-const browserExecutable = "C:/Program Files/Google/Chrome/Application/chrome.exe";
+// Browser: CHROME_PATH, then common install places. If none exists, Remotion uses its own browser.
+const browserExecutable = [process.env.CHROME_PATH, "C:/Program Files/Google/Chrome/Application/chrome.exe", "/usr/bin/google-chrome", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"].filter(Boolean).find((p) => fs.existsSync(p));
 const chromiumOptions = { gl: "angle" };
 const serveUrl = await bundle({ entryPoint: path.resolve(process.env.BRIDGE_ENTRY || "src/index.ts"), publicDir: path.resolve("public") });
-const composition = await selectComposition({ serveUrl, id: "BridgeShort", browserExecutable, chromiumOptions });
+const composition = await selectComposition({ serveUrl, id: process.env.BRIDGE_COMP || "BridgeShort", browserExecutable, chromiumOptions });
 const onBrowserLog = (l) => { if (l.type === "error" || l.type === "warning") console.log(`[${l.type}]`, l.text.slice(0, 300)); };
 for (const f of frames.split(",").map(Number)) {
   const t0 = Date.now();

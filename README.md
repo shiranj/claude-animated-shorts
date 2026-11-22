@@ -18,8 +18,6 @@ Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broug
 | `docs/CINEMATIC_PIPELINE.md` | Cinematic production architecture and phased implementation |
 | `references/STYLE_BIBLE.md` | Original bridge-style research, retained for legacy projects |
 | `references/reports/` | Seven measured reports: motion, depth, textures, characters, lighting, outlines, grade |
-| `references/frames/` | 38 full-size reference frames (540x960) to compare your frames against |
-| `references/sheets/` | 20 contact sheets, one per reference short, 60 frames each (1,200 frames) |
 
 ## Install
 1. Copy this folder to `~/.claude/skills/cartoon-3d-short/` (clone it there, or download the ZIP).
@@ -33,4 +31,4 @@ Claude then follows `SKILL.md`: topic and facts, then script, then voice, then t
 - Story, characters and voice should always be your own. Use the references for the look, not the content.
 
 ## License
-The code and docs are MIT (see `LICENSE`). The reference frames are included for style study only.
+The code and docs are MIT (see `LICENSE`). No third-party video frames are included.
