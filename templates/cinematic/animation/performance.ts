@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { PoseContext, PoseLayer } from "../AnimatedCharacter";
 import { DEG, clamp, ease, lerp, wrapPi } from "./math";
-import { HAND_POSES, applyHandPose, mixPose, type HandPose } from "./hands";
+import { HAND_POSES, applyHandPose, mixPose, resolveHandPose, type HandPose } from "./hands";
 import { applyFace, blinkStarts, type FaceParams } from "./face";
 import { aimBone, rotateBoneAxis, solveTwoBone, worldPos } from "./rigtools";
 import { evaluate, locoChain, type CharacterScript, type Emotion, type FrameEnv, type FrameState, type Hand } from "./script";
@@ -145,6 +145,7 @@ const solveArm = (ctx: PoseContext, hand: Hand, state: FrameState): HandPose => 
       }
     }
   }
+  if (arm.fingers && arm.fingersWeight > 0.001) pose = mixPose(pose, resolveHandPose(arm.fingers), arm.fingersWeight);
   return pose;
 };
 

@@ -51,7 +51,10 @@ export type Action =
   /** Arm gestures. Point and reach need `at`. Wave does not. The other arm is not affected. */
   | (Timed & { type: "point" | "reach" | "wave"; hand: Hand; at?: Target })
   /** Hold a carried prop (for example a lantern) low and steady, with a relaxed grip. */
-  | (Timed & { type: "carry"; hand: Hand });
+  | (Timed & { type: "carry"; hand: Hand })
+  /** Set the finger pose of one hand for a while: a name from HAND_POSES (`"flat"`, `"cupped"`, `"fist"`...) or some fingers (`{ index: 0, middle: 0.9 }`, 0 straight, 1 closed). Arm gestures and carrying still decide where the hand is. */
+  | (Timed & { type: "hand"; hand: Hand; pose: HandPoseName | Partial<Record<"thumb" | "index" | "middle" | "ring" | "pinky", number>> });
+export type HandPoseName = "relaxed" | "cupped" | "flat" | "open" | "fist" | "point" | "grip";
 
 export type CharacterScript = {
   /** Where and which way the character stands at frame 0. Position in metres, yaw in degrees (0 = facing +z). */
@@ -64,7 +67,8 @@ export type TargetTable = Record<string, (frame: number) => Vec3>;
 export type FrameEnv = { targets: TargetTable; motion: { x: ArrayLike<number>; z: ArrayLike<number>; yaw: ArrayLike<number> } };
 
 export type LookItem = { wEye: number; wHead: number; point: Vec3 | null; yaw: number; pitch: number };
-export type ArmItem = { carry: number; gesture: "point" | "reach" | "wave" | null; gestureWeight: number; target: Vec3 | null; /** 0 to 1 through the gesture action. */ progress: number };
+export type ArmItem = { carry: number; gesture: "point" | "reach" | "wave" | null; gestureWeight: number; target: Vec3 | null; /** 0 to 1 through the gesture action. */ progress: number;
+  /** A finger pose asked for by a `hand` action, and how strongly it applies (0 to 1). */ fingers: Extract<Action, { type: "hand" }>["pose"] | null; fingersWeight: number };
 export type FrameState = {
   frame: number;
   /** Where the character is, in world space (metres, radians). */
@@ -128,7 +132,7 @@ export const evaluate = (script: CharacterScript, chain: LocoChain, frame: numbe
   const state: FrameState = {
     frame, x: env.motion.x[i], z: env.motion.z[i], yaw: env.motion.yaw[i],
     loco: locoAt(chain, frame), look: [], emotions: {}, startle: 0,
-    arms: { left: { carry: 0, gesture: null, gestureWeight: 0, target: null, progress: 0 }, right: { carry: 0, gesture: null, gestureWeight: 0, target: null, progress: 0 } },
+    arms: { left: { carry: 0, gesture: null, gestureWeight: 0, target: null, progress: 0, fingers: null, fingersWeight: 0 }, right: { carry: 0, gesture: null, gestureWeight: 0, target: null, progress: 0, fingers: null, fingersWeight: 0 } },
   };
   let emotionSum = 0;
   const addEmotion = (e: Emotion, w: number) => { if (w <= 0) return; state.emotions[e] = (state.emotions[e] ?? 0) + w; emotionSum += w; };
@@ -159,6 +163,7 @@ export const evaluate = (script: CharacterScript, chain: LocoChain, frame: numbe
         if (w > arm.gestureWeight) { arm.gesture = a.type; arm.gestureWeight = w; arm.target = resolveTarget(a.at, frame, env); arm.progress = clamp((frame - a.from) / Math.max(a.to - a.from, 1)); }
         break;
       }
+      case "hand": { const arm = state.arms[a.hand], w = envelope(frame, a, a.blend ?? DEFAULT_BLEND.gesture); if (w > arm.fingersWeight) { arm.fingers = a.pose; arm.fingersWeight = w; } break; }
       case "carry": { const arm = state.arms[a.hand]; arm.carry = Math.max(arm.carry, envelope(frame, a, a.blend ?? DEFAULT_BLEND.carry)); break; }
       default: break; // movement and turns are handled by the locomotion chain and the motion builder
     }
