@@ -42,4 +42,4 @@ Sound: integrated loudness -17.0 LUFS, loudness range 12.3 LU after `produce.mjs
 
 - **Implemented and tested:** everything in the tables above.
 - **Implemented, checked by eye only:** faces, hands, expressions, prop interaction, lighting mood, story continuity (contact sheets and phone-size sheets).
-- **Not verified:** narration timing against a real voice (the placeholder voice was used; timings were checked against the line lengths of that voice), other GPUs, other PCs, 16:9 rendering (only the composition check ran at 1920 x 1080), the five templates other than `historical` and `informative` as full videos (each was rendered as one still), `bridge-stills.mjs` against a real project.
+- **Not verified:** narration timing against a real voice (the placeholder voice was used; timings were checked against the line lengths of that voice), other GPUs, other PCs, 16:9 rendering (only the composition check ran at 1920 x 1080), all six templates as full videos (each was rendered as one still only), `bridge-stills.mjs` against a real project.
